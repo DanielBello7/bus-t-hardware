@@ -4,7 +4,7 @@ from flask import Blueprint, request
 from modules.log.logger import logger
 from datetime import datetime
 from inspect import currentframe
-from nfc import NFC
+from .nfc import NFC
 from multiprocessing import Process, Queue
 
 nfc_routes = Blueprint("nfc_routes", __name__, url_prefix="/api/nfc")

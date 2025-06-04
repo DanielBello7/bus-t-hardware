@@ -3,7 +3,7 @@
 from modules.log.logger import logger
 from flask import Blueprint
 from datetime import datetime
-from gps import GPS
+from .gps import GPS
 
 gps_routes = Blueprint("gps_routes", __name__, url_prefix="/api/gps")
 gps = GPS()

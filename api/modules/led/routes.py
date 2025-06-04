@@ -2,7 +2,7 @@
 
 from flask import request, Blueprint
 from modules.log.logger import logger
-from led import LED
+from .led import LED
 from datetime import datetime
 from inspect import currentframe
 
