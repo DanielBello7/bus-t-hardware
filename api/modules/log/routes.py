@@ -17,7 +17,7 @@ def index():
     num = int(request.args.get("limit") or 60)
 
     # the log returns a list of JSON objects, but must be a single JSON object
-    lst = logger.get_led_logs(num)
+    lst = logger.get_log(num)
 
     # create OrderedDict to preserve time order of elements
     # since each log entry must have a top-level key in the wrapper JSON object
