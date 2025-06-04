@@ -1,7 +1,7 @@
 """"""
 
 from flask import Blueprint, request
-from api.modules.log.logger import logger
+from modules.log.logger import logger
 from datetime import datetime
 from inspect import currentframe
 from nfc import NFC

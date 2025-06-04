@@ -1,7 +1,7 @@
 """"""
 
 from flask import request, Blueprint
-from api.modules.log.logger import logger
+from modules.log.logger import logger
 from led import LED
 from datetime import datetime
 from inspect import currentframe

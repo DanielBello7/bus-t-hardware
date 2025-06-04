@@ -1,6 +1,6 @@
 """"""
 
-from api.modules.log.logger import logger
+from modules.log.logger import logger
 from flask import Blueprint
 from datetime import datetime
 from battery import Battery
