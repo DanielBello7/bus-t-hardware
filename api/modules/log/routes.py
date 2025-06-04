@@ -1,7 +1,7 @@
 """"""
 
 from flask import Blueprint, request
-from logger import logger
+from .logger import logger
 from collections import OrderedDict
 
 logger_routes = Blueprint("logger_routes", __name__, url_prefix="/api/logs")

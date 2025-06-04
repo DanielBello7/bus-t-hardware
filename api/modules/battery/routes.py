@@ -3,7 +3,7 @@
 from modules.log.logger import logger
 from flask import Blueprint
 from datetime import datetime
-from battery import Battery
+from .battery import Battery
 
 battery_routes = Blueprint("battery_routes", __name__, url_prefix="/api/battery")
 battery = Battery(17)
