@@ -3,6 +3,7 @@
 from mfrc522 import SimpleMFRC522  # type: ignore
 from RPi.GPIO import cleanup  # type: ignore
 from pprint import pprint
+import atexit
 
 """
 Module that helps in handling the operations for an NFC scanner running on
@@ -10,12 +11,13 @@ the I2C port, you can perform multiple operations on this, including
 reading and writing onto nfc tags 
 """
 
+atexit.register(cleanup)
+
 
 class NFC:
     def __init__(self):
         try:
             self.reader = SimpleMFRC522()
-            return
         except Exception as e:
             pprint(f"Error occured: {str(e)}")
             self.reader = None
@@ -58,3 +60,5 @@ class NFC:
 
 if __name__ == "__main__":
     nfc = NFC()
+    result = nfc.read_from_card()
+    pprint(f"result: {result}")
