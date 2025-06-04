@@ -9,7 +9,7 @@ from api.modules.log.routes import logger_routes
 from api.modules.nfc.routes import nfc_routes
 
 # prepare the relevant items
-# prepare the env configuration files
+# prepare the modularized flask api routes
 # prepare the flask application
 # open the flask server to cors and allow access from anywhere
 app = Flask(__name__)
