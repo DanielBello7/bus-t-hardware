@@ -1,0 +1,10 @@
+services:
+  electron-builder:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /app
+    command: ["npm", "run", "build:linux", "--linux"]
+    volumes:
+      - ./dist:/app/dist
+      - ./release:/app/release 
