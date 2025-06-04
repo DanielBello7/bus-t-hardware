@@ -29,6 +29,12 @@ def insert_msg(msg, sts):
 # read data from nfc
 @nfc_routes.route("/read", methods=["GET"])
 def read_from_nfc_card():
+    """
+    http://localhost:5500/api/nfc/read?timeout=15
+    you can set timeout for the read
+    """
+    global nfc_process, is_busy, queue
+
     if is_busy:
         return {"response": "reader currently busy"}
     try:
@@ -41,8 +47,10 @@ def read_from_nfc_card():
 
         result = None
 
+        timeout = int(request.args.get("timeout") or 10)
+
         # wait for 10s
-        nfc_process.join(timeout=10)
+        nfc_process.join(timeout=timeout)
 
         if nfc_process.is_alive():
             nfc_process.terminate()
@@ -60,7 +68,9 @@ def read_from_nfc_card():
 
 # read data from nfc
 @nfc_routes.route("/cancel", methods=["GET"])
-def read_from_nfc_card():
+def cancel_operation():
+    global nfc_process, is_busy
+
     if not nfc_process and not is_busy:
         return {"response": "nothing active"}
     try:
@@ -73,3 +83,9 @@ def read_from_nfc_card():
     except Exception as e:
         insert_msg(f"Error occured when canceling operation: {str(e)}")
         return {"error": f"Error occured: {str(e)}"}
+
+
+@nfc_routes.route("/status", methods=["GET"])
+def status():
+    global is_busy
+    return {"response": "busy" if is_busy else "idle"}

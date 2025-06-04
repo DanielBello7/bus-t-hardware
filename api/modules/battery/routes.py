@@ -9,7 +9,7 @@ battery_routes = Blueprint("battery_routes", __name__, url_prefix="/api/battery"
 battery = Battery(17)
 
 
-@battery_routes.route("/level")
+@battery_routes.route("/level", methods=["GET"])
 def get_location():
     try:
         logger.add_entry(

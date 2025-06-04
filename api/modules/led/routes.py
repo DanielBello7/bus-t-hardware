@@ -24,7 +24,7 @@ def insert_msg(msg):
 
 # server api routes for making actions on the led class
 # turn off the lights
-@led_routes.route("/off/")
+@led_routes.route("/off/", methods=["GET"])
 def turn_led_off():
     try:
         r = led.turn_off()
@@ -36,7 +36,7 @@ def turn_led_off():
 
 
 # turn on the lights
-@led_routes.route("/on/")
+@led_routes.route("/on/", methods=["GET"])
 def turn_led_on():
     try:
         r = led.turn_on()
@@ -48,7 +48,7 @@ def turn_led_on():
 
 
 # get the current status of the lights
-@led_routes("/status/")
+@led_routes("/status/", methods=["GET"])
 def index():
     try:
         r = led.is_on
@@ -60,7 +60,7 @@ def index():
 
 
 # blink the lights
-@led_routes.route("/blink/")
+@led_routes.route("/blink/", methods=["GET"])
 def blink_lights():
     try:
         """Blinks the light, limited by duration parameter

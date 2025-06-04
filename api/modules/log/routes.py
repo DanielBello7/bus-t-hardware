@@ -9,7 +9,7 @@ logger_routes = Blueprint("logger_routes", __name__, url_prefix="/api/logs")
 
 # server api routes for making actions on the log class
 # get the current logs
-@logger_routes.route("/")
+@logger_routes.route("/", methods=["GET"])
 def index():
     """Returns the log as a JSON object, limited by limit parameter
     (e.g. http://localhost/api/led/logs?limit=50)

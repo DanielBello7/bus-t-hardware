@@ -9,7 +9,7 @@ gps_routes = Blueprint("gps_routes", __name__, url_prefix="/api/gps")
 gps = GPS()
 
 
-@gps_routes.route("/location")
+@gps_routes.route("/location", methods=["GET"])
 def get_location():
     try:
         logger.add_entry(
