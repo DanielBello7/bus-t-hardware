@@ -2,11 +2,11 @@
 
 from flask_cors import CORS
 from flask import Flask
-from api.modules.battery.routes import battery_routes
-from api.modules.gps.routes import gps_routes
-from api.modules.led.routes import led_routes
-from api.modules.log.routes import logger_routes
-from api.modules.nfc.routes import nfc_routes
+from modules.battery.routes import battery_routes
+from modules.gps.routes import gps_routes
+from modules.led.routes import led_routes
+from modules.log.routes import logger_routes
+from modules.nfc.routes import nfc_routes
 
 # prepare the relevant items
 # prepare the modularized flask api routes
