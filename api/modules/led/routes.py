@@ -48,7 +48,7 @@ def turn_led_on():
 
 
 # get the current status of the lights
-@led_routes("/status/", methods=["GET"])
+@led_routes.route("/status/", methods=["GET"])
 def index():
     try:
         r = led.is_on
