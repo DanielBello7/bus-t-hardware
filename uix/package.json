@@ -12,7 +12,8 @@
     "build:linux": "tsc && vite build && electron-builder --linux",
     "docker:build:linux": "docker-compose up --build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "dev:live": "vite --host"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.14",
