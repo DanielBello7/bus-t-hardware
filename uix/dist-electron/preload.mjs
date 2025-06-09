@@ -25,5 +25,7 @@ electron.contextBridge.exposeInMainWorld("myApi", {
   desktop: true,
   title: (params) => electron.ipcRenderer.send("title", params),
   close: () => electron.ipcRenderer.send("close"),
-  start: () => electron.ipcRenderer.send("start")
+  start: () => electron.ipcRenderer.send("start"),
+  widen: () => electron.ipcRenderer.send("widen"),
+  exits: () => electron.ipcRenderer.send("exits")
 });

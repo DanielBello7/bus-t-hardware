@@ -7,6 +7,8 @@ declare global {
             title: (params: string) => void;
             close: () => void;
             start: () => void;
+            widen: () => void;
+            exits: () => void;
         };
     }
 }

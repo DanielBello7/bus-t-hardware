@@ -38,6 +38,13 @@ function createWindow() {
   ipcMain.on("close", () => {
     app.quit();
   });
+  ipcMain.on("widen", () => {
+    win == null ? void 0 : win.setFullScreen(true);
+    console.log("jey");
+  });
+  ipcMain.on("exits", () => {
+    win == null ? void 0 : win.setFullScreen(false);
+  });
   const script_path = path.join(__dirname, "../run.sh");
   ipcMain.on("start", () => {
     execFile(script_path, (error, stdout, stderr) => {

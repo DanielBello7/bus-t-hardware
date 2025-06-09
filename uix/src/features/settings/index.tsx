@@ -25,42 +25,34 @@ const initial = {
 
 export function Settings() {
     const [isLoading, setIsLoading] = useState(false);
-    const [isError, setIsError] = useState<boolean>(false);
-    const [error, setError] = useState<Error>();
     const [formdata, setformdata] = useState<typeof initial>(initial);
 
     const sheet = useSheet((state) => state);
     const settings = useSettings((state) => state);
 
-    const get_data = useCallback(
-        async (e: FormEvent) => {
-            e.preventDefault();
-            setIsError(false);
-            setIsLoading(true);
+    const get_data = async (e: FormEvent) => {
+        e.preventDefault();
+        setIsLoading(true);
 
-            try {
-                schema.parse(formdata);
-                const response = await axios.get(`${formdata.url}/ping`);
-                const res = response.data as unknown as API_RES;
-                if (res.response === 'ping') {
-                    toaster.alert('Connected');
-                    settings.set_data({
-                        url: formdata.url,
-                        connected: true,
-                    });
-                } else throw new Error(`error connecting`);
-            } catch (e) {
-                const err = ensure_error(e);
-                setIsError(true);
-                setError(err);
-                toaster.error(`Error occured: ${err.message}`);
-                settings.set_data({ connected: false });
-            } finally {
-                setIsLoading(false);
-            }
-        },
-        [settings.data.url, formdata],
-    );
+        try {
+            schema.parse(formdata);
+            const response = await axios.get(`${formdata.url}/ping`);
+            const res = response.data as unknown as API_RES;
+            if (res.response === 'ping') {
+                toaster.alert('Connected');
+                settings.set_data({
+                    url: formdata.url,
+                    connected: true,
+                });
+            } else throw new Error(`error connecting`);
+        } catch (e) {
+            const err = ensure_error(e);
+            toaster.error(`Error occured: ${err.message}`);
+            settings.set_data({ connected: false });
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     return (
         <Sheet onOpenChange={sheet.toggle_sheet} open={sheet.data.open}>
@@ -127,17 +119,28 @@ export function Settings() {
                             Close App
                         </Button>
                     </div>
-                    {/* <div className="w-full">
-            <Button
-              className="w-full cursor-pointer"
-              variant={'link'}
-              onClick={() => {
-                window.myApi.start();
-              }}
-            >
-              Run Server
-            </Button>
-          </div> */}
+                    <div className="w-full">
+                        <Button
+                            className="w-full cursor-pointer"
+                            variant={'link'}
+                            onClick={() => {
+                                window.myApi.widen();
+                            }}
+                        >
+                            Widen App
+                        </Button>
+                    </div>
+                    <div className="w-full">
+                        <Button
+                            className="w-full cursor-pointer"
+                            variant={'secondary'}
+                            onClick={() => {
+                                window.myApi.exits();
+                            }}
+                        >
+                            Shrink App
+                        </Button>
+                    </div>
                 </div>
             </div>
             <AppSheet setformdata={setformdata} />
