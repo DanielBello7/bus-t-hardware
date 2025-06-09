@@ -14,7 +14,7 @@ reading and writing onto nfc tags
 atexit.register(cleanup)
 
 
-class NFC:
+class NFC_MFRC522:
     def __init__(self):
         try:
             self.reader = SimpleMFRC522()
@@ -59,6 +59,6 @@ class NFC:
 
 
 if __name__ == "__main__":
-    nfc = NFC()
+    nfc = NFC_MFRC522()
     result = nfc.read_from_card()
     pprint(f"result: {result}")

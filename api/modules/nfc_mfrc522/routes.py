@@ -4,12 +4,12 @@ from flask import Blueprint, request
 from modules.log.logger import logger
 from datetime import datetime
 from inspect import currentframe
-from .nfc import NFC
+from .nfc_mfrc522 import NFC_MFRC522
 from multiprocessing import Process, Queue
 
 nfc_routes = Blueprint("nfc_routes", __name__, url_prefix="/api/nfc")
 
-nfc = NFC()
+nfc = NFC_MFRC522()
 queue = Queue()
 nfc_process = None
 is_busy = False
