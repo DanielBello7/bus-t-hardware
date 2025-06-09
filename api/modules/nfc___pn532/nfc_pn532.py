@@ -1,12 +1,12 @@
 """"""
 
-from adafruit_pn532.i2c import PN532_I2C  # type: ignore
-from RPi.GPIO import cleanup  # type: ignore
 import board  # type: ignore
 import busio  # type: ignore
-from digitalio import DigitalInOut  # type: ignore
-from pprint import pprint
 import atexit
+from RPi.GPIO import cleanup  # type: ignore
+from pprint import pprint
+from adafruit_pn532.i2c import PN532_I2C  # type: ignore
+from digitalio import DigitalInOut  # type: ignore
 
 
 atexit.register(cleanup)
@@ -19,29 +19,27 @@ class NFC_PN532:
             self.reset_pin = DigitalInOut(board.D6)
             self.req_pin = DigitalInOut(board.D12)
             self.timeout = timeout
+            self.is_busy = False
             self.pn532 = PN532_I2C(
                 self.i2c, debug=False, reset=self.reset_pin, req=self.req_pin
             )
             self.pn532.SAM_configuration()
         except Exception as e:
-            self.i2c = None
-            self.reset_pin = None
-            self.req_pin = None
             self.pn532 = None
-            pprint(f"Error occured: {str(e)}")
+            pprint(f"error occured: {str(e)}")
 
-    def read_uuid(self, as_string=False):
+    def _read_uuid(self, as_string=False):
         try:
             if not self.pn532:
                 raise Exception("reader not initialized")
 
             uid = self.pn532.read_passive_target(timeout=self.timeout)
             if uid == None:
-                return None
+                raise Exception("no uuid")
 
             if as_string:
                 uid_string = "".join(f"{i:02X}" for i in uid)
-                return {"result": uid_string}
+                return uid_string
             else:
                 return uid
         except Exception as e:
@@ -49,7 +47,7 @@ class NFC_PN532:
             pprint(f"Error occured: {error}")
             return None
 
-    def authenticate(self, uid, block_number=4):
+    def _authenticate(self, uid, block_number=4):
         try:
             if not self.pn532:
                 raise Exception("reader not initialized")
@@ -71,43 +69,52 @@ class NFC_PN532:
             if not self.pn532:
                 raise Exception("reader not initialized")
 
-            uid = self.read_uuid(as_string=False)
-            if uid is None:
-                return {"error": "no card detected"}
+            self.is_busy = True
 
-            auth = self.authenticate(uid=uid, block_number=block)
+            uid = self._read_uuid(as_string=False)
+            if uid is None:
+                raise Exception("no card detected")
+
+            auth = self._authenticate(uid=uid, block_number=block)
             if auth == False:
-                return {"error": "unable to read from card, authentication failed"}
+                raise Exception("unable to read from card, authentication failed")
 
             data = self.pn532.mifare_classic_read_block(block)
             decoded = data.decode().rstrip("\x00")
+
+            self.is_busy = False
             return {"result": decoded}
         except Exception as e:
+            self.is_busy = False
             error = str(e)
             pprint(f"Error occured: {error}")
-            return {"error": error}
+            return {"error": f"error occured: {error}"}
 
     def write_mifare_classic(self, data="Hello NFC Card!", block=4):
         try:
             if not self.pn532:
                 raise Exception("reader not initialized")
 
-            uid = self.read_uuid(as_string=False)
-            if uid is None:
-                return {"error": "no card detected"}
+            self.is_busy = True
 
-            auth = self.authenticate(uid=uid, block_number=block)
+            uid = self._read_uuid(as_string=False)
+            if uid is None:
+                raise Exception("no card detected")
+
+            auth = self._authenticate(uid=uid, block_number=block)
             if auth == False:
-                return {"error": "authentication failed"}
+                raise Exception("authentication failed")
 
             payload = bytearray(data.encode("utf-8")).ljust(16, b"\x00")
             self.pn532.mifare_classic_write_block(block, payload)
 
+            self.is_busy = False
             return self.read(block=block)
         except Exception as e:
+            self.is_busy = False
             error = str(e)
             pprint(f"Error occured: {error}")
-            return {"error": error}
+            return {"error": f"error occured: {error}"}
 
     def cancel(self):
         """
@@ -119,8 +126,10 @@ class NFC_PN532:
                 raise Exception("reader not initialized")
 
             cleanup()
+            self.is_busy = False
             return {"result": "canceled"}
         except Exception as e:
+            self.is_busy = False
             error = str(e)
             pprint(f"Error occured: {error}")
             return {"error": f"error occured: {error}"}

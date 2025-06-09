@@ -11,12 +11,12 @@ gps = GPS_NEO_6M()
 
 
 # helper function to add message into the logger
-def insert_msg(msg, sts):
+def insert_msg(msg):
     logger.add_entry(
         {
-            "status": sts,
-            "action": msg,
-            "performed_at": datetime.isoformat(datetime.now()),
+            "status": msg,
+            "action": currentframe().f_back.f_code.co_name,
+            "performed_at": datetime.utcnow().isoformat() + "Z",
         }
     )
 
@@ -30,12 +30,12 @@ def get_location():
         if not data.get("result"):
             raise Exception(data.get("error", "unknown error during get location"))
 
-        insert_msg("get location called", currentframe().f_code.co_name)
+        insert_msg("getting current location")
         return jsonify({"response": data["result"]}), 200
     except Exception as e:
         error = str(e)
-        insert_msg(error, currentframe().f_code.co_name)
-        return jsonify({"error": f"error occurred: {str(e)}"}), 400
+        insert_msg(error)
+        return jsonify({"error": f"error occurred: {error}"}), 400
 
 
 @gps_routes.route("/last_saved", methods=["GET"])
@@ -47,12 +47,12 @@ def get_last_saved():
         if not data.get("result"):
             raise Exception(data.get("error", "unknown error during get last saved"))
 
-        insert_msg("get location called", currentframe().f_code.co_name)
+        insert_msg("getting last saved location")
         return jsonify({"response": data["result"]}), 200
     except Exception as e:
         error = str(e)
-        insert_msg(error, currentframe().f_code.co_name)
-        return jsonify({"error": f"error occurred: {str(e)}"}), 400
+        insert_msg(error)
+        return jsonify({"error": f"error occurred: {error}"}), 400
 
 
 @gps_routes.route("/stream", methods=["GET"])
@@ -64,12 +64,12 @@ def stream_location():
         if not data.get("result"):
             raise Exception(data.get("error", "unknown error during stream"))
 
-        insert_msg("stream location called", currentframe().f_code.co_name)
+        insert_msg("streaming location")
         return jsonify({"response": data["result"]}), 200
     except Exception as e:
         error = str(e)
-        insert_msg(error, currentframe().f_code.co_name)
-        return jsonify({"error": f"error occurred: {str(e)}"}), 400
+        insert_msg(error)
+        return jsonify({"error": f"error occurred: {error}"}), 400
 
 
 @gps_routes.route("/cancel_stream", methods=["GET"])
@@ -81,12 +81,12 @@ def stop_streaming():
         if not data.get("result"):
             raise Exception(data.get("error", "unknown error occurred"))
 
-        insert_msg("streaming canceled", currentframe().f_code.co_name)
+        insert_msg("streaming canceled")
         return jsonify({"response": data["result"]}), 200
     except Exception as e:
         error = str(e)
-        insert_msg(error, currentframe().f_code.co_name)
-        return jsonify({"error": f"error occurred: {str(e)}"}), 400
+        insert_msg(error)
+        return jsonify({"error": f"error occurred: {error}"}), 400
 
 
 @gps_routes.route("/status", methods=["GET"])
@@ -95,13 +95,12 @@ def streaming_status():
 
     try:
         data = gps.get_streaming_status()
-
         if not data.get("result"):
             raise Exception(data.get("error", "undefined error"))
 
-        insert_msg("status called", currentframe().f_code.co_name)
+        insert_msg("getting streaming status")
         return jsonify({"response": data["result"]}), 200
     except Exception as e:
         error = str(e)
-        insert_msg(error, currentframe().f_code.co_name)
-        return jsonify({"error": f"error occurred: {str(e)}"}), 400
+        insert_msg(error)
+        return jsonify({"error": f"error occurred: {error}"}), 400

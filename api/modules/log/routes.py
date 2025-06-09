@@ -1,6 +1,6 @@
 """"""
 
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 from .logger import logger
 from collections import OrderedDict
 
@@ -26,4 +26,4 @@ def index():
     for d in lst:
         od[d["created_at"]] = d
 
-    return lst
+    return jsonify({"response", lst}), 200

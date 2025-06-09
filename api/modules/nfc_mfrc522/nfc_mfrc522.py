@@ -20,12 +20,13 @@ class NFC_MFRC522:
         try:
             self.reader = SimpleMFRC522()
             self.timeout = timeout
+            self.is_busy = False
         except Exception as e:
             error = str(e)
             pprint(f"Error occured: {error}")
             self.reader = None
 
-    def read_from_card(self):
+    def reads(self):
         try:
             if not self.reader:
                 raise Exception("reader not initialized")
@@ -39,20 +40,26 @@ class NFC_MFRC522:
                 except Exception as e_inner:
                     result["error"] = str(e_inner)
 
+            self.is_busy = True
             thread = threading.Thread(target=read_op)
             thread.start()
             thread.join(timeout=self.timeout)
 
             if thread.is_alive():
-                return {"error": "no card detected"}
+                raise Exception("no card detected")
 
+            if "error" in result:
+                raise Exception(result["error"])
+
+            self.is_busy = False
             return result
         except Exception as e:
+            self.is_busy = False
             error = str(e)
             pprint(f"Error occured: {error}")
             return {"error": f"error occured: {error}"}
 
-    def cancel(self):
+    def pause(self):
         """
         Only useful if the read is running in another thread.
         Just calls GPIO cleanup, but cannot interrupt `reader.read()` directly.
@@ -68,7 +75,7 @@ class NFC_MFRC522:
             pprint(f"Error occured: {error}")
             return {"error": f"error occured: {error}"}
 
-    def write_card(self, text="Hello NFC!"):
+    def write(self, text="Hello NFC!"):
         try:
             if not self.reader:
                 raise Exception("reader not initialized")
@@ -81,15 +88,21 @@ class NFC_MFRC522:
                 except Exception as e_inner:
                     result["error"] = str(e_inner)
 
+            self.is_busy = True
             thread = threading.Thread(target=write_op)
             thread.start()
             thread.join(timeout=self.timeout)
 
             if thread.is_alive():
-                return {"error": "no card detected"}
+                raise Exception("no card detected")
 
+            if "error" in result:
+                raise Exception(result["error"])
+
+            self.is_busy = False
             return result
         except Exception as e:
+            self.is_busy = False
             error = str(e)
             pprint(f"Error occured: {error}")
             return {"error": f"error occured: {error}"}
@@ -98,6 +111,6 @@ class NFC_MFRC522:
 if __name__ == "__main__":
     nfc = NFC_MFRC522(timeout=4.0)
     pprint("waiting for card...")
-    result = nfc.read_from_card()
+    result = nfc.reads()
     pprint("read successful")
     pprint(result)

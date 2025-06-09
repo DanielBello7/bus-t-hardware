@@ -3,17 +3,17 @@
 import busio  # type: ignore
 import digitalio  # type: ignore
 import board  # type: ignore
+import threading
 from adafruit_mcp3xxx.mcp3008 import MCP3008  # type: ignore
 from adafruit_mcp3xxx.analog_in import AnalogIn  # type: ignore
 from time import sleep
 from pprint import pprint
 from datetime import datetime
-import threading
 
 """
-Module that helps in reading the voltage level from the analog to digital 
-converter which in turn gives the level of the battery connected to the 
-system. It runs on the GPIO pin.
+module that helps in reading the voltage level from the analog to digital 
+converter which in turn gives the level of the battery connected to the system. 
+it communicates over the SPI bus
 """
 
 
@@ -96,7 +96,7 @@ class ADC_MCP3008:
         try:
             if not self.channel:
                 raise Exception("not connected")
-            return dict(self.ptg)
+            return {"result": dict(self.ptg)}
         except Exception as e:
             pprint(f"error occurred: {str(e)}")
             return {"error": f"error occurred: {str(e)}"}

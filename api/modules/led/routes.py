@@ -1,6 +1,6 @@
 """"""
 
-from flask import request, Blueprint
+from flask import request, Blueprint, jsonify
 from modules.log.logger import logger
 from .led import LED
 from datetime import datetime
@@ -15,9 +15,9 @@ led = LED(17)
 def insert_msg(msg):
     logger.add_entry(
         {
-            "status": led.is_on,
-            "performed_at": datetime.isoformat(datetime.now()),
-            "action": msg,
+            "status": msg,
+            "action": currentframe().f_back.f_code.co_name,
+            "performed_at": datetime.utcnow().isoformat() + "Z",
         }
     )
 
@@ -28,11 +28,16 @@ def insert_msg(msg):
 def turn_led_off():
     try:
         r = led.turn_off()
-        insert_msg(currentframe().f_code.co_name)
-        return {"response": r}
+
+        if not r.get("result"):
+            raise Exception(r.get("error", "unknown error when turning led off"))
+
+        insert_msg("turning off the led")
+        return jsonify({"response": r}), 200
     except Exception as e:
-        insert_msg(f"Error trying to turn lights off: {str(e)}")
-        return {"error": f"error occured: {str(e)}"}
+        error = str(e)
+        insert_msg(error)
+        return jsonify({"error": f"error occured: {error}"}), 400
 
 
 # turn on the lights
@@ -40,11 +45,16 @@ def turn_led_off():
 def turn_led_on():
     try:
         r = led.turn_on()
-        insert_msg(currentframe().f_code.co_name)
-        return {"response": r}
+
+        if not r.get("result"):
+            raise Exception(r.get("error", "unknown error when turning led on"))
+
+        insert_msg("turning on the led")
+        return jsonify({"response": r}), 200
     except Exception as e:
-        insert_msg(f"Error trying to turn lights on {str(e)}")
-        return {"error": f"error occured: {str(e)}"}
+        error = str(e)
+        insert_msg(error)
+        return jsonify({"error": f"error occured: {error}"}), 400
 
 
 # get the current status of the lights
@@ -52,11 +62,16 @@ def turn_led_on():
 def index():
     try:
         r = led.is_on
-        insert_msg(currentframe().f_code.co_name)
-        return {"response": {"status": r}}
+
+        if not r.get("result"):
+            raise Exception(r.get("error", "unknown error when getting led status"))
+
+        insert_msg("getting led status")
+        return jsonify({"response": r}), 200
     except Exception as e:
-        insert_msg(f"Error occured trying to get status of lights: {str(e)}")
-        return {"error": f"error occured: {str(e)}"}
+        error = str(e)
+        insert_msg(error)
+        return jsonify({"error": f"error occured: {error}"}), 400
 
 
 # blink the lights
@@ -69,8 +84,13 @@ def blink_lights():
         dur = int(request.args.get("duration") or 3)
 
         r = led.blink_lights(dur)
-        insert_msg(currentframe().f_code.co_name)
-        return {"response": r}
+
+        if not r.get("result"):
+            raise Exception(r.get("error", "unknown error when blinking led"))
+
+        insert_msg("blinking led lights")
+        return jsonify({"response": r}), 200
     except Exception as e:
-        insert_msg(f"Error occured trying to blink lights: {str(e)}")
-        return {"error": f"error occured: {str(e)}"}
+        error = str(e)
+        insert_msg(error)
+        return jsonify({"error": f"error occured: {error}"}), 400

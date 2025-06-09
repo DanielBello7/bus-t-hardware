@@ -1,41 +1,77 @@
 """"""
 
 from modules.log.logger import logger
-from flask import Blueprint
+from flask import Blueprint, jsonify
 from datetime import datetime
 from .adc_mcp3008 import ADC_MCP3008
+from inspect import currentframe
 
-battery_routes = Blueprint("battery_routes", __name__, url_prefix="/api/battery")
-battery = ADC_MCP3008(17)
+adc_mcp3008_routes = Blueprint(
+    "adc_mcp3008_routes", __name__, url_prefix="/api/mcp3008"
+)
+battery = ADC_MCP3008()
 
 
 # helper function to add message into the logger
-def insert_msg(msg, sts):
+def insert_msg(msg):
     logger.add_entry(
         {
-            "status": sts,
-            "action": msg,
-            "performed_at": datetime.isoformat(datetime.now()),
+            "status": msg,
+            "action": currentframe().f_back.f_code.co_name,
+            "performed_at": datetime.utcnow().isoformat() + "Z",
         }
     )
 
 
-@battery_routes.route("/level", methods=["GET"])
-def get_location():
+@adc_mcp3008_routes.route("/level", methods=["GET"])
+def get_level():
+    global battery
+
     try:
-        logger.add_entry(
-            {
-                "performed_at": datetime.isoformat(datetime.now()),
-                "action": "get battery level called",
-            }
-        )
-        return {"response": 0}
+        response = battery.percentage()
+        if not response.get("result"):
+            raise Exception(response.get("error", "unknown error"))
+
+        insert_msg("get battery level called")
+        return jsonify({"response": response["result"]}), 200
     except Exception as e:
-        logger.add_entry(
-            {
-                "status": "Error getting battery level",
-                "action": "get battery",
-                "performed_at": datetime.isoformat(datetime.now()),
-            }
-        )
-        return {"error": f"error occured {str(e)}"}
+        error = str(e)
+        insert_msg(error)
+        return jsonify({"error": f"error occured: {error}"}), 400
+
+
+@adc_mcp3008_routes.route("/start", methods=["GET"])
+def start_reading():
+    global battery
+
+    try:
+        response = battery.listen()
+        if not response.get("result"):
+            raise Exception(response.get("error", "unknown error"))
+
+        insert_msg("start reading battery level")
+        return jsonify({"response": response["result"]}), 200
+    except Exception as e:
+        error = str(e)
+        insert_msg(error)
+        return jsonify({"error": f"error occured: {error}"}), 400
+
+
+@adc_mcp3008_routes.route("/pause", methods=["GET"])
+def stop_reading():
+    global battery
+
+    try:
+        response = battery.stop_listen()
+        if not response.get("result"):
+            raise Exception(response.get("error", "unknown error"))
+
+        insert_msg("stop reading battery level")
+        return jsonify({"response": response["result"]}), 200
+    except Exception as e:
+        error = str(e)
+        insert_msg(error)
+        return jsonify({"error": f"error occured: {error}"}), 400
+
+
+""""""

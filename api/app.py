@@ -3,7 +3,8 @@
 from flask_cors import CORS
 from flask import Flask
 from flask_socketio import SocketIO
-from modules.battery.routes import battery_routes
+from modules.adc_ads1115.routes import adc_ads1115_routes
+from modules.adc_mcp3008.routes import adc_mcp3008_routes
 from modules.gps__neo_6m.routes import gps_routes
 from modules.led.routes import led_routes
 from modules.log.routes import logger_routes
@@ -19,12 +20,13 @@ CORS(app, supports_credentials=False, resources={r"/*": {"origins": ["*"]}})
 
 socketio = SocketIO(app, cors_allowed_origins="*")
 
-app.register_blueprint(battery_routes)
+app.register_blueprint(adc_ads1115_routes)
+app.register_blueprint(adc_mcp3008_routes)
 app.register_blueprint(gps_routes)
 app.register_blueprint(led_routes)
 app.register_blueprint(logger_routes)
-app.register_blueprint(nfc_mfrc522_routes)
 app.register_blueprint(nfc_pn532_routes)
+app.register_blueprint(nfc_mfrc522_routes)
 
 
 @app.route("/ping")
