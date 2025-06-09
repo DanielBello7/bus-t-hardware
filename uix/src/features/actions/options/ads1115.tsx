@@ -1,31 +1,32 @@
-import { ensure_error } from '@/lib/ensure-error';
 import { Button } from '@/components';
-import { toaster } from '@/store';
-import { Label } from '@radix-ui/react-label';
-import { useSettings } from '@/store';
-import { useState } from 'react';
 import { OptionBox } from '../options-box';
-import { Loader, Locate } from 'lucide-react';
+import { useState } from 'react';
+import { toaster, useSettings } from '@/store';
+import { ensure_error } from '@/lib/ensure-error';
+import { Loader } from 'lucide-react';
+import { Label } from '@radix-ui/react-label';
+import { get_percent } from '@/components/percent';
 import axios from 'axios';
 
-export function GPS() {
+export function ADS1115() {
     const [isLoading, setIsLoading] = useState(false);
-    const [coords, setCoords] = useState('0.0000,0.0000');
+    const [percentage, setPercentage] = useState(0);
     const settings = useSettings((state) => state);
 
-    const get_location = async () => {
+    const get_battery = async () => {
         if (!settings.data.connected) {
             return toaster.error('Connection Error: Not Connected to API');
         }
         if (isLoading) return;
 
         setIsLoading(true);
+
         try {
-            const response = (
-                await axios.get(`${settings.data.url}/api/gps/location`)
-            ).data;
-            setCoords(response);
-            toaster.alert('Success!');
+            const response = await axios.get(
+                `${settings.data.url}/api/ads1115/level`
+            );
+            setPercentage(response.data.percentage);
+            toaster.alert('Success');
         } catch (e) {
             const err = ensure_error(e);
             toaster.error(`Error occured: ${err.message}`);
@@ -36,37 +37,39 @@ export function GPS() {
 
     return (
         <OptionBox
-            type="location"
-            title="GPS"
-            sub="NEO-6M"
-            key={'LOCATION'}
+            sub="ADS1115"
+            title="Battery"
+            key={'battery'}
+            type="lightbulb"
         >
             <div className="w-full">
-                <p className="px-2">Get the location using NEO-6M</p>
+                <p className="px-2">
+                    Get the battery level using the ADS1115
+                </p>
 
                 <div className="w-full flex items-center space-x-3 mt-3 border-t border-b p-2">
                     <Button
-                        onClick={get_location}
+                        onClick={get_battery}
                         disabled={isLoading && true}
                         size={'icon'}
                         variant={'outline'}
                         className="cursor-pointer p-2 shadow-none rounded-full border-2 border-black"
                     >
                         {isLoading ? (
-                            <Loader className="size-4 animate-spin" />
+                            <Loader className="size-6 animate-spin" />
                         ) : (
-                            <Locate className="size-4" />
+                            get_percent(percentage)
                         )}
                     </Button>
-                    <Label className="text-md">LOCATE</Label>
+                    <Label className="text-md">GET LEVEL</Label>
                 </div>
 
-                <div className="w-full bg-white p-2 border rounded-b">
+                <div className="p-2 rounded-b bg-white">
                     <p className="text-[0.6rem] mb-1 martian-exlight">
-                        LOCATION
+                        CHARGE
                     </p>
-                    <p className="text-lg martian-elight font-bold truncate">
-                        {coords}
+                    <p className="text-lg martian-elight font-bold">
+                        {percentage}%
                     </p>
                 </div>
             </div>
