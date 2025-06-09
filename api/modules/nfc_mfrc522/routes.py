@@ -1,17 +1,16 @@
 """"""
 
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 from modules.log.logger import logger
 from datetime import datetime
 from inspect import currentframe
 from .nfc_mfrc522 import NFC_MFRC522
-from multiprocessing import Process, Queue
 
-nfc_routes = Blueprint("nfc_routes", __name__, url_prefix="/api/nfc")
+nfc_mfrc522_routes = Blueprint(
+    "nfc_mfrc522_routes", __name__, url_prefix="/api/mfrc522"
+)
 
-nfc = NFC_MFRC522()
-queue = Queue()
-nfc_process = None
+nfc = NFC_MFRC522(timeout=4.0)
 is_busy = False
 
 
@@ -27,65 +26,88 @@ def insert_msg(msg, sts):
 
 
 # read data from nfc
-@nfc_routes.route("/read", methods=["GET"])
+@nfc_mfrc522_routes.route("/read", methods=["GET"])
 def read_from_nfc_card():
-    """
-    http://localhost:5500/api/nfc/read?timeout=15
-    you can set timeout for the read
-    """
-    global nfc_process, is_busy, queue
+    global is_busy, nfc
 
-    if is_busy:
-        return {"response": "reader currently busy"}
     try:
-        insert_msg(currentframe().f_code.co_name, "Read From card")
+        if is_busy:
+            raise Exception("reader busy")
 
-        # start read process on another thread
-        nfc_process = Process(target=nfc.read_from_card, args=(queue,))
-        nfc_process.start()
         is_busy = True
-
-        result = None
-
-        timeout = int(request.args.get("timeout") or 10)
-
-        # wait for 10s
-        nfc_process.join(timeout=timeout)
-
-        if nfc_process.is_alive():
-            nfc_process.terminate()
-            nfc_process.join()
-        else:
-            if not queue.empty():
-                result = queue.get()
-
+        data = nfc.read_from_card()
         is_busy = False
-        return {"response": result}
+
+        if not data.get("result"):
+            raise Exception(data.get("error", "unknown read error"))
+
+        insert_msg("Read Using MFRC522", currentframe().f_code.co_name)
+        return jsonify({"response": data}), 200
     except Exception as e:
-        insert_msg(f"Error occured when reading from nfc: {str(e)}")
-        return {"error": f"Error occured: {str(e)}"}
+        error = str(e)
+        msg = f"Error occured: {error}"
+        insert_msg(msg, currentframe().f_code.co_name)
+        response = {"error": msg}
+        return jsonify(response), 400
+    finally:
+        is_busy = False
 
 
-# read data from nfc
-@nfc_routes.route("/cancel", methods=["GET"])
-def cancel_operation():
-    global nfc_process, is_busy
+@nfc_mfrc522_routes.route("/write", methods=["POST"])
+def write_to_card():
+    global is_busy, nfc
 
-    if not nfc_process and not is_busy:
-        return {"response": "nothing active"}
     try:
-        if nfc_process.is_alive():
-            nfc_process.terminate()
-            nfc_process.join()
+        if is_busy:
+            raise Exception("reader busy")
+
+        write_data = request.get_json()
+
+        if not write_data or "data" not in write_data:
+            raise ValueError("Missing 'data' field in request body")
+
+        is_busy = True
+        data = nfc.write_card(text=write_data["data"])
         is_busy = False
-        insert_msg(currentframe().f_code.co_name, "Success canceling operation")
-        return {"response": "operation cancelled"}
+
+        if not data.get("result"):
+            raise Exception(data.get("error", "unknown write error"))
+
+        insert_msg("Write using MFRC522", currentframe().f_code.co_name)
+        return jsonify({"response": data}), 200
     except Exception as e:
-        insert_msg(f"Error occured when canceling operation: {str(e)}")
-        return {"error": f"Error occured: {str(e)}"}
+        error = str(e)
+        msg = f"Error occured: {error}"
+        insert_msg(msg, currentframe().f_code.co_name)
+        response = {"error": msg}
+        return jsonify(response), 400
+    finally:
+        is_busy = False
 
 
-@nfc_routes.route("/status", methods=["GET"])
+# cancel nfc operations
+@nfc_mfrc522_routes.route("/cancel", methods=["GET"])
+def cancel_operation():
+    global is_busy, nfc
+
+    try:
+        data = nfc.cancel()
+        is_busy = False
+        if not data.get("result"):
+            raise Exception(data.get("error", "unknown cancel error"))
+
+        return jsonify({"response": "canceled"}), 200
+    except Exception as e:
+        error = str(e)
+        msg = f"Error occured: {error}"
+        insert_msg(msg, currentframe().f_code.co_name)
+        response = {"error": msg}
+        return jsonify(response), 400
+    finally:
+        is_busy = False
+
+
+@nfc_mfrc522_routes.route("/status", methods=["GET"])
 def status():
     global is_busy
-    return {"response": "busy" if is_busy else "idle"}
+    return jsonify({"response": "busy" if is_busy else "idle"}), 200

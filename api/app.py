@@ -6,7 +6,8 @@ from modules.battery.routes import battery_routes
 from modules.gps.routes import gps_routes
 from modules.led.routes import led_routes
 from modules.log.routes import logger_routes
-from modules.nfc.routes import nfc_routes
+from modules.nfc_mfrc522.routes import nfc_mfrc522_routes
+from modules.nfc_pn532.routes import nfc_pn532_routes
 
 # prepare the relevant items
 # prepare the modularized flask api routes
@@ -20,7 +21,8 @@ app.register_blueprint(battery_routes)
 app.register_blueprint(gps_routes)
 app.register_blueprint(led_routes)
 app.register_blueprint(logger_routes)
-app.register_blueprint(nfc_routes)
+app.register_blueprint(nfc_mfrc522_routes)
+app.register_blueprint(nfc_pn532_routes)
 
 
 @app.route("/ping")
