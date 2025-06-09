@@ -5,6 +5,8 @@
 
 ## MCP3008 (ANALOG TO DIGITAL CONVERTER FOR BATTERY LEVEL)
 1. http://localhost:5500/api/ads1115/level/ ------[GET] ----🚫
+2. http://localhost:5500/api/ads1115/start/ ------[GET] ----🚫
+3. http://localhost:5500/api/ads1115/stop/ -------[GET] ----🚫
 
 ##  RFID RFC522
 1. http://localhost:5500/api/rfc522/read/ --------[GET] ----✅
