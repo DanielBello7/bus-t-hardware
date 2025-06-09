@@ -40,7 +40,8 @@ export function Blink() {
     <OptionBox key={'blink'} title="LED" type="asscending" sub="Lights">
       <div className="w-full">
         <p className="px-2">Blink the lights on the Raspberry-Pi</p>
-        <div className="w-full flex items-center space-x-3 mt-3 border-t border-b p-2">
+
+        <div className="w-full flex items-center space-x-3 mt-3 p-2">
           <Button
             disabled={isLoading}
             onClick={blink_lights}

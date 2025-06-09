@@ -128,7 +128,7 @@ export function NFC() {
         <form
           onSubmit={w_data}
           id="form-1"
-          className="border rounded-b flex flex-col pb-0 bg-white"
+          className="rounded-b flex flex-col pb-0 bg-white"
         >
           <p className="text-[0.6rem] mb-1 martian-exlight px-2 pt-2">
             CHARGE

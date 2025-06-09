@@ -82,7 +82,7 @@ export function BatteryLevel() {
           <Label className="text-md">GET LEVEL</Label>
         </div>
 
-        <div className="border p-2 rounded-b bg-white">
+        <div className="p-2 rounded-b bg-white">
           <p className="text-[0.6rem] mb-1 martian-exlight">CHARGE</p>
           <p className="text-lg martian-elight font-bold">{percentage}%</p>
         </div>
