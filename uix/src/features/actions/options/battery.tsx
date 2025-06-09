@@ -11,6 +11,7 @@ import {
   BatteryMedium,
   BatteryFull,
 } from 'lucide-react';
+import { Label } from '@radix-ui/react-label';
 
 export function BatteryLevel() {
   const [isLoading, setIsLoading] = useState(false);
@@ -19,16 +20,16 @@ export function BatteryLevel() {
 
   const get_percent = () => {
     if (percentage <= 10) {
-      return <Battery className="size-8" />;
+      return <Battery className="size-4" />;
     }
     if (percentage > 10 && percentage <= 50) {
-      return <BatteryLow className="size-8" />;
+      return <BatteryLow className="size-4" />;
     }
     if (percentage > 50 && percentage <= 70) {
-      return <BatteryMedium className="size-8" />;
+      return <BatteryMedium className="size-4" />;
     }
     if (percentage > 70 && percentage <= 100) {
-      return <BatteryFull className="size-8" />;
+      return <BatteryFull className="size-4" />;
     }
   };
 
@@ -36,6 +37,7 @@ export function BatteryLevel() {
     if (!settings.data.connected) {
       return toaster.error('Not connected. Connect to api in settings');
     }
+    if (isLoading) return;
 
     setIsLoading(true);
 
@@ -54,27 +56,35 @@ export function BatteryLevel() {
   };
 
   return (
-    <OptionBox sub="Battery Level" title="Battery" type="lightbulb">
+    <OptionBox
+      sub="Battery"
+      title="Percentage"
+      key={'battery'}
+      type="lightbulb"
+    >
       <div className="w-full">
-        <p>Battery Level</p>
-        <div className="border p-5 rounded-sm bg-white my-3">
-          <p className="martian-light text-[1.1rem]">{percentage}%</p>
-        </div>
-        <div className="w-full mt-3 flex items-center">
+        <p className="px-2">Get the battery level of the device</p>
+
+        <div className="w-full flex items-center space-x-3 mt-3 border-t border-b p-2">
           <Button
             onClick={get_battery}
             disabled={isLoading && true}
             size={'icon'}
             variant={'outline'}
-            className="cursor-pointer p-6 shadow-none rounded-full border-4 border-black"
+            className="cursor-pointer p-2 shadow-none rounded-full border-2 border-black"
           >
             {isLoading ? (
-              <Loader className="size-8 animate-spin" />
+              <Loader className="size-6 animate-spin" />
             ) : (
               get_percent()
             )}
           </Button>
-          <span className="ms-3 font-black">GET LEVEL</span>
+          <Label className="text-md">GET LEVEL</Label>
+        </div>
+
+        <div className="border p-2 rounded-b bg-white">
+          <p className="text-[0.6rem] mb-1 martian-exlight">CHARGE</p>
+          <p className="text-lg martian-elight font-bold">{percentage}%</p>
         </div>
       </div>
     </OptionBox>

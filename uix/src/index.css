@@ -74,6 +74,16 @@
   font-weight: 400;
 }
 
+.martian-regular {
+  font-family: 'Martian Mono';
+  font-weight: 500;
+}
+
+.martian-medium {
+  font-family: 'Martian Mono';
+  font-weight: 600;
+}
+
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;

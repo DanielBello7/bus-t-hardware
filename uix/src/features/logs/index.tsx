@@ -34,9 +34,7 @@ export function Logs() {
       }
       try {
         setIsLoading(true);
-        const response = await axios.get(
-          `${settings.data.url}/api/led/logs/`
-        );
+        const response = await axios.get(`${settings.data.url}/api/logs`);
         setLogs(response.data);
       } catch (e) {
         const err = ensure_error(e);
@@ -64,7 +62,7 @@ export function Logs() {
           </TableCaption>
         )}
         <TableCaption>A list of your recent activity logs.</TableCaption>
-        <TableHeader className="bg-muted text-xl">
+        <TableHeader className="bg-muted text-md">
           <TableRow>
             <TableHead className="w-[100px]">S/N</TableHead>
             <TableHead>Created At</TableHead>
@@ -73,7 +71,7 @@ export function Logs() {
             <TableHead>Light On</TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody className="text-xl">
+        <TableBody className="text-md w-full">
           {logs.map((datum, idx) => (
             <TableRow key={idx}>
               <TableCell className="font-medium">{idx + 1}</TableCell>
@@ -82,10 +80,10 @@ export function Logs() {
                   dateStyle: 'short',
                 })}
               </TableCell>
-              <TableCell className="truncate">
-                {datum.value.action}
+              <TableCell className="max-w-[200px] truncate line-clamp-5">
+                <span className="truncate">{datum.value.action}</span>
               </TableCell>
-              <TableCell>
+              <TableCell className="truncate">
                 {new Date(datum.value.performed_at).toLocaleDateString(
                   'en-us',
                   {

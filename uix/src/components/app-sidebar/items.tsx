@@ -4,16 +4,16 @@ export const items = [
   {
     title: 'Home',
     url: 'actions',
-    icon: <Home size={32} />,
+    icon: <Home />,
   },
   {
     title: 'Logs',
     url: 'logs',
-    icon: <Table size={32} />,
+    icon: <Table />,
   },
   {
     title: 'Settings',
     url: 'settings',
-    icon: <Settings size={32} />,
+    icon: <Settings />,
   },
 ];

@@ -14,11 +14,11 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon">
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarGroupLabel className="text-xl py-6">
+        <SidebarGroup className="p-0">
+          <SidebarGroupLabel className="text-xl py-[28px] px-4 border-b rounded-none">
             Application
           </SidebarGroupLabel>
-          <SidebarGroupContent className="mt-4">
+          <SidebarGroupContent className="py-4 px-2">
             <TabsList>
               <SidebarMenu>
                 {items.map((item, idx) => {

@@ -3,7 +3,7 @@ import { OptionBox } from '../options-box';
 import { useSettings } from '@/store';
 import { toaster } from '@/store';
 import { ensure_error } from '@/lib/ensure-error';
-import { Button, Input, Label } from '@/components';
+import { Button, Input } from '@/components';
 import { Loader } from 'lucide-react';
 import axios from 'axios';
 import classnames from 'classnames';
@@ -18,6 +18,7 @@ export function NFC() {
 
   const settings = useSettings((state) => state);
 
+  /** cancel the read request */
   const cancel_read = () => {
     if (abortRef.current) {
       abortRef.current.abort();
@@ -26,6 +27,7 @@ export function NFC() {
     }
   };
 
+  /** read data from card */
   const r_data = async () => {
     if (!settings.data.connected) {
       return toaster.error(
@@ -39,13 +41,12 @@ export function NFC() {
     abortRef.current = new AbortController();
 
     try {
-      const response = await axios.get(
-        `${settings.data.url}/api/nfc/read/`,
-        {
+      const response = (
+        await axios.get(`${settings.data.url}/api/nfc/read`, {
           signal: abortRef.current.signal,
-        }
-      );
-      toaster.alert(JSON.stringify(response.data.msg));
+        })
+      ).data;
+      toaster.alert(JSON.stringify(response.response));
     } catch (e) {
       const err = ensure_error(e);
       toaster.error(`Error occured when reading: ${err.message}`);
@@ -55,6 +56,7 @@ export function NFC() {
     }
   };
 
+  /** write data into the card */
   const w_data = async (e: FormEvent) => {
     e.preventDefault();
 
@@ -73,7 +75,7 @@ export function NFC() {
     setIsWriting(true);
     try {
       const response = await axios.post(
-        `${settings.data.url}/api/nfc/write/`,
+        `${settings.data.url}/api/nfc/write`,
         {
           text: data,
         }
@@ -88,26 +90,16 @@ export function NFC() {
   };
 
   return (
-    <OptionBox type="rectangle-ellipsis" title="Scanner" sub="NFC rc500">
-      <div className="w-full">
-        <p>Read/Write NFC</p>
-        <form onSubmit={w_data} className="mt-3" id="form-1">
-          <Label className="martian-thin mb-3">Write Data</Label>
-          <Input
-            placeholder="Type something..."
-            title="write-data"
-            name="write-data"
-            className="w-full shadow-none martian-thin bg-white"
-            value={data}
-            disabled={(isReading || isWriting) && true}
-            onChange={(e) => {
-              const text = e.currentTarget.value;
-              setdata(text);
-            }}
-          />
-        </form>
+    <OptionBox
+      type="rectangle-ellipsis"
+      title="NFC"
+      sub="RFC522"
+      key={'NFC'}
+    >
+      <div className="w-full flex flex-col">
+        <p className="px-2">Read/Write data using the NFC protocol</p>
 
-        <div className="grid grid-cols-2 items-center justify-between gap-4 mt-3">
+        <div className="w-full flex items-center space-x-3 mt-3 border-t border-b p-2">
           <Button
             className="cursor-pointer"
             disabled={(isReading || isWriting) && true}
@@ -132,6 +124,28 @@ export function NFC() {
             {isReading ? 'Cancel' : 'Read'}
           </Button>
         </div>
+
+        <form
+          onSubmit={w_data}
+          id="form-1"
+          className="border rounded-b flex flex-col pb-0 bg-white"
+        >
+          <p className="text-[0.6rem] mb-1 martian-exlight px-2 pt-2">
+            CHARGE
+          </p>
+          <Input
+            placeholder="Write Data..."
+            title="write-data"
+            name="write-data"
+            className="w-full shadow-none martian-thin bg-white border-0"
+            value={data}
+            disabled={(isReading || isWriting) && true}
+            onChange={(e) => {
+              const text = e.currentTarget.value;
+              setdata(text);
+            }}
+          />
+        </form>
       </div>
     </OptionBox>
   );

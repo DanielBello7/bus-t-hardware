@@ -12,8 +12,7 @@ import z from 'zod';
 import axios from 'axios';
 
 type API_RES = {
-  msg: string;
-  cde: '404' | '400';
+  response: string;
 };
 
 const schema = z.object({
@@ -41,17 +40,18 @@ export function Settings() {
 
       try {
         schema.parse(formdata);
-        const response = await axios.get(`${formdata.url}/ping/`);
+        const response = await axios.get(`${formdata.url}/ping`);
         const res = response.data as unknown as API_RES;
-        if (res.msg === 'success') {
+        if (res.response === 'ping') {
           toaster.alert('Connected');
-          settings.set_data({ url: formdata.url });
-        } else throw new Error(`error connecting: ${res.msg}`);
+          settings.set_data({ url: formdata.url, connected: true });
+        } else throw new Error(`error connecting`);
       } catch (e) {
         const err = ensure_error(e);
         setIsError(true);
         setError(err);
         toaster.error(`Error occured: ${err.message}`);
+        settings.set_data({ connected: false });
       } finally {
         setIsLoading(false);
       }

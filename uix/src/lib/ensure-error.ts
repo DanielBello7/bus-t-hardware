@@ -8,7 +8,8 @@ export function ensure_error(err: unknown): Error {
   }
   if (err instanceof AxiosError) {
     if (err.response) {
-      const newError = new Error(err.response.data.msg);
+      let msg = err.message + ` ${err.response.data.msg ?? ''}`;
+      const newError = new Error(msg);
       return newError;
     }
   }

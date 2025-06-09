@@ -1,11 +1,11 @@
 import { Label, Button } from '@/components';
 import { OptionBox } from '../options-box';
 import { Lightbulb, LightbulbOff, Loader } from 'lucide-react';
-import classnames from 'classnames';
-import axios from 'axios';
 import { useCallback, useEffect, useState } from 'react';
 import { toaster, useSettings } from '@/store';
 import { ensure_error } from '@/lib/ensure-error';
+import classnames from 'classnames';
+import axios from 'axios';
 
 export function Toggle() {
   const [status, setStatus] = useState(false);
@@ -40,15 +40,19 @@ export function Toggle() {
           'Not connected. Make connections to api in settings'
         );
       }
+      if (isLoading) return;
+
       try {
         setIsLoading(true);
-        const response = await axios.get(
-          `${settings.data.url}/api/led/${state ? 'on' : 'off'}/`
-        );
-        if (response.data.response.error) {
-          throw new Error(response.data.response.error);
+        const response = (
+          await axios.get(
+            `${settings.data.url}/api/led/${state ? 'on' : 'off'}/`
+          )
+        ).data;
+        if (response.error) {
+          throw new Error(response.error);
         } else {
-          setStatus(response.data.response.status);
+          setStatus(response.status);
         }
       } catch {
         toaster.error(
@@ -60,7 +64,7 @@ export function Toggle() {
         setIsLoading(false);
       }
     },
-    [settings.data.connected, settings.data.url]
+    [settings.data.connected, settings.data.url, isLoading]
   );
 
   useEffect(() => {
@@ -68,14 +72,13 @@ export function Toggle() {
   }, [get_status]);
 
   return (
-    <OptionBox type="lightbulb" title="Toggle" sub="Lights toggle">
+    <OptionBox type="lightbulb" title="LED" sub="Lights" key={'toggle'}>
       <div className="w-full">
-        <p>Toggle the lights on the Raspberry-Pi</p>
-        <br />
-        <div className="flex items-center space-x-3">
+        <p className="px-2">Toggle the lights on the Raspberry-Pi</p>
+        <div className="w-full flex items-center space-x-3 mt-3 border-t border-b p-2">
           <Button
             className={classnames(
-              'cursor-pointer shadow-none p-6 rounded-full border-4 border-black',
+              'cursor-pointer shadow-none p-2 rounded-full border-2 border-black',
               {
                 'bg-amber-100': status,
                 'bg-stone-100': !status,
@@ -87,14 +90,14 @@ export function Toggle() {
             disabled={isLoading || isFetching}
           >
             {isLoading || isFetching ? (
-              <Loader className="size-3 animate-spin" />
+              <Loader className="size-4 animate-spin" />
             ) : status ? (
-              <Lightbulb className="size-8" />
+              <Lightbulb className="size-4" />
             ) : (
-              <LightbulbOff className="size-8" />
+              <LightbulbOff className="size-4" />
             )}
           </Button>
-          <Label className="text-xl font-black">
+          <Label className="text-md">
             {status ? 'LIGHTS ON' : 'LIGHTS OFF'}
           </Label>
         </div>

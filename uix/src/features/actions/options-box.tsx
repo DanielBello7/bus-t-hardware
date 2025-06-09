@@ -36,12 +36,10 @@ export function OptionBox(props: Props) {
     type = 'lightbulb',
   } = props;
   return (
-    <Card className="shadow-none rounded-sm bg-slate-50">
-      <CardHeader className="relative">
-        <CardDescription className="text-2xl">{sub}</CardDescription>
-        <CardTitle className="@[250px]/card:text-4xl text-3xl font-semibold tabular-nums">
-          {title}
-        </CardTitle>
+    <Card className="shadow-none rounded-sm bg-slate-50 p-0 gap-3 border-black">
+      <CardHeader className="relative p-2 border-b">
+        <CardDescription className="text-sm">{sub}</CardDescription>
+        <CardTitle className="text-lg font-semibold">{title}</CardTitle>
         <div className="absolute right-4 top-4">
           <div className="flex gap-1 text-xs bg-gray-400 text-white size-7 items-center justify-center rounded-full border-4 border-black">
             {type === 'asscending' && (
@@ -57,9 +55,10 @@ export function OptionBox(props: Props) {
           </div>
         </div>
       </CardHeader>
-      <CardFooter className="flex-col items-start gap-1 text-2xl">
+
+      <div className="flex flex-col items-start text-sm p-0">
         {children}
-      </CardFooter>
+      </div>
     </Card>
   );
 }

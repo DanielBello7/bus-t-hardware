@@ -3,7 +3,6 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { TabsTrigger } from '../ui';
-import React from 'react';
 
 type Props = {
   title: string;
@@ -22,7 +21,7 @@ export function AppSidebarItem(props: Props) {
           className="py-5 cursor-pointer hover:bg-slate-200"
         >
           {icon}
-          <span className="text-xl">{title}</span>
+          <span className="text-[1rem]">{title}</span>
         </TabsTrigger>
       </SidebarMenuButton>
     </SidebarMenuItem>
