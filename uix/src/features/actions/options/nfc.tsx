@@ -1,3 +1,4 @@
+/** FOR THE NFC RFC522 HARDWARE */
 import { FormEvent, useRef, useState } from 'react';
 import { OptionBox } from '../options-box';
 import { useSettings } from '@/store';
@@ -11,37 +12,49 @@ import classnames from 'classnames';
 export function NFC() {
     const [isReading, setIsReading] = useState(false);
     const [isWriting, setIsWriting] = useState(false);
-
     const [data, setdata] = useState('');
 
-    const abortRef = useRef<AbortController | null>(null);
+    const rAbort = useRef<AbortController | null>(null);
+
+    const wAbort = useRef<AbortController | null>(null);
 
     const settings = useSettings((state) => state);
 
     /** cancel the read request */
-    const cancel_read = () => {
-        if (abortRef.current) {
-            abortRef.current.abort();
-            toaster.error('Read canceled');
+    const cancel_r = () => {
+        if (rAbort.current) {
+            rAbort.current.abort();
+            toaster.error('Cancel Error: Canceled Read Request');
             setIsReading(false);
+        }
+    };
+
+    /** cancel the write request */
+    const cancel_w = (e: FormEvent) => {
+        e.preventDefault();
+
+        if (wAbort.current) {
+            wAbort.current.abort();
+            toaster.error('Cancel Error: Canceled Write Request');
+            setIsWriting(false);
         }
     };
 
     /** read data from card */
     const r_data = async () => {
-        if (!settings.data.connected) {
+        if (settings.data.connected == false) {
             return toaster.error('Connection Error: Not Connected to API');
         }
 
         if (isReading || isWriting) return;
 
         setIsReading(true);
-        abortRef.current = new AbortController();
+        rAbort.current = new AbortController();
 
         try {
             const response = (
-                await axios.get(`${settings.data.url}/api/nfc/read`, {
-                    signal: abortRef.current.signal,
+                await axios.get(`${settings.data.url}/api/rfc522/read`, {
+                    signal: rAbort.current.signal,
                 })
             ).data;
             toaster.alert(JSON.stringify(response.response));
@@ -50,7 +63,7 @@ export function NFC() {
             toaster.error(`Error occured when reading: ${err.message}`);
         } finally {
             setIsReading(false);
-            abortRef.current = null;
+            rAbort.current = null;
         }
     };
 
@@ -61,20 +74,19 @@ export function NFC() {
         if (!settings.data.connected) {
             return toaster.error('Connection Error: Not Connected to API');
         }
-
-        if (isReading || isWriting) return;
-
         if (!data.trim()) {
             return toaster.error('Cannot write empty data into tag');
         }
 
+        if (isReading || isWriting) return;
         setIsWriting(true);
+
+        wAbort.current = new AbortController();
         try {
             const response = await axios.post(
-                `${settings.data.url}/api/nfc/write`,
-                {
-                    text: data,
-                }
+                `${settings.data.url}/api/rfc522/write`,
+                { text: data },
+                { signal: wAbort.current.signal }
             );
             toaster.alert(response.data.msg);
         } catch (e) {
@@ -115,7 +127,7 @@ export function NFC() {
                         disabled={isWriting && true}
                         variant={isReading ? 'destructive' : 'default'}
                         onClick={() => {
-                            isReading ? cancel_read() : r_data();
+                            isReading ? cancel_r() : r_data();
                         }}
                     >
                         {isReading && <Loader className="animate-spin" />}
@@ -124,7 +136,7 @@ export function NFC() {
                 </div>
 
                 <form
-                    onSubmit={w_data}
+                    onSubmit={isWriting ? cancel_w : w_data}
                     id="form-1"
                     className="rounded-b flex flex-col pb-0 bg-white"
                 >

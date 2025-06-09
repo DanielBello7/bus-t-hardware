@@ -1,3 +1,4 @@
+/** GETTING GPS COORDINATES USING THE NEO-6M */
 import { ensure_error } from '@/lib/ensure-error';
 import { Button } from '@/components';
 import { toaster } from '@/store';

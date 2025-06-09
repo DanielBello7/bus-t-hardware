@@ -1,3 +1,4 @@
+/** FOR THE ANALOG TO DIGITAL CONVERTER MCP3008 */
 import { Button } from '@/components';
 import { OptionBox } from '../options-box';
 import { useState } from 'react';

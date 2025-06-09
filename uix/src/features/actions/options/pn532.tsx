@@ -1,3 +1,4 @@
+/** NFC PN532 READER */
 import { Button, Input } from '@/components';
 import { OptionBox } from '../options-box';
 import { FormEvent, useRef, useState } from 'react';

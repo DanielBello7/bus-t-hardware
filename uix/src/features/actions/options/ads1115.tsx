@@ -1,3 +1,4 @@
+/** FOR THE ANALOG TO DIGITAL CONVERTER ADS1115 */
 import { Button } from '@/components';
 import { OptionBox } from '../options-box';
 import { useState } from 'react';
