@@ -6,7 +6,7 @@ import { Label } from '@/components';
 import { useSettings } from '@/store';
 import { ensure_error } from '@/lib/ensure-error';
 import { useState } from 'react';
-import axios from 'axios';
+import { blink_led } from '@/api/led';
 
 export function Blink() {
     const [isLoading, setIsLoading] = useState(false);
@@ -21,10 +21,7 @@ export function Blink() {
         setIsLoading(true);
 
         try {
-            const response = (
-                await axios.get(`${settings.data.url}/api/led/blink/`)
-            ).data;
-            if (response.error) throw new Error();
+            await blink_led();
         } catch (e) {
             const err = ensure_error(e);
             toaster.error(

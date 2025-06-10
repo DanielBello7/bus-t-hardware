@@ -9,46 +9,38 @@ import {
 } from '@/components';
 import { Loader } from 'lucide-react';
 import { toaster, useSettings } from '@/store';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { ensure_error } from '@/lib/ensure-error';
-import axios from 'axios';
-
-type Log = {
-    created_at: string;
-    value: Record<string, any> & {
-        action: string;
-        performed_at: string;
-        status: boolean;
-    };
-};
+import { LOG } from '@/types/log';
+import { get_logs } from '@/api';
 
 export function Logs() {
-    const [logs, setLogs] = useState<Log[]>([]);
+    const [logs, setLogs] = useState<LOG[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const settings = useSettings((state) => state);
 
-    useEffect(() => {
-        async function get_data() {
-            if (!settings.data.connected) {
-                return setIsLoading(false);
-            }
-            try {
-                setIsLoading(true);
-                const response = await axios.get(
-                    `${settings.data.url}/api/logs`,
-                );
-                setLogs(response.data);
-            } catch (e) {
-                const err = ensure_error(e);
-                toaster.error(
-                    `Error occured when fetching logs: ${err.message}`,
-                );
-            } finally {
-                setIsLoading(false);
-            }
+    const get_data = useCallback(async () => {
+        if (!settings.data.connected) {
+            return setIsLoading(false);
         }
+        setIsLoading(true);
+
+        try {
+            const response = (await get_logs()).response;
+            setLogs(response);
+        } catch (e) {
+            const err = ensure_error(e);
+            toaster.error(
+                `Error occured when fetching logs: ${err.message}`
+            );
+        } finally {
+            setIsLoading(false);
+        }
+    }, [settings.data.connected]);
+
+    useEffect(() => {
         get_data();
-    }, [settings.data.connected, settings.data.url]);
+    }, [get_data]);
 
     return (
         <div className="w-full h-full p-3">
@@ -85,7 +77,7 @@ export function Logs() {
                             </TableCell>
                             <TableCell>
                                 {new Date(
-                                    datum.created_at,
+                                    datum.created_at
                                 ).toLocaleDateString('en-us', {
                                     dateStyle: 'short',
                                 })}
@@ -97,7 +89,7 @@ export function Logs() {
                             </TableCell>
                             <TableCell className="truncate">
                                 {new Date(
-                                    datum.value.performed_at,
+                                    datum.value.performed_at
                                 ).toLocaleDateString('en-us', {
                                     dateStyle: 'short',
                                 })}

@@ -5,8 +5,11 @@ type Params = {
     text: string;
 };
 export async function write_using_pn532(
-    params: Params
+    params: Params,
+    signal: AbortSignal
 ): Promise<Res<string>> {
-    const response = await api.post('/api/pn532/write/', params);
+    const response = await api.post('/api/pn532/write/', params, {
+        signal,
+    });
     return response.data;
 }

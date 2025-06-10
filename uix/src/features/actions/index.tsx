@@ -5,7 +5,7 @@ import {
     GPS,
     GSM,
     MCP3008,
-    NFC,
+    RFC522_NFC,
     PN532,
     Toggle,
 } from './options';
@@ -31,7 +31,7 @@ export function Actions() {
             <Toggle />
             <GPS />
             <ADS1115 />
-            <NFC />
+            <rfc522_nfc />
             <PN532 />
             <MCP3008 />
             <GSM />

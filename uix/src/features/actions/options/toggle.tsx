@@ -5,7 +5,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { toaster, useSettings } from '@/store';
 import { ensure_error } from '@/lib/ensure-error';
 import classnames from 'classnames';
-import axios from 'axios';
+import { led_status, turn_off_led, turn_on_led } from '@/api/led';
 
 export function Toggle() {
     const [status, setStatus] = useState(false);
@@ -22,10 +22,8 @@ export function Toggle() {
         setIsFetching(true);
 
         try {
-            const response = (
-                await axios.get(`${settings.data.url}/api/led/status`)
-            ).data;
-            setStatus(response.status);
+            const response = (await led_status()).response;
+            setStatus(response);
         } catch (e) {
             const err = ensure_error(e);
             toaster.error(
@@ -34,7 +32,7 @@ export function Toggle() {
         } finally {
             setIsFetching(false);
         }
-    }, [isFetching, settings.data.connected, settings.data.url]);
+    }, [isFetching, settings.data.connected]);
 
     const toggle_light = async (params: boolean) => {
         if (settings.data.connected == false) {
@@ -44,18 +42,10 @@ export function Toggle() {
 
         setIsLoading(true);
         try {
-            const response = (
-                await axios.get(
-                    `${settings.data.url}/api/led/${
-                        params ? 'on' : 'off'
-                    }/`
-                )
-            ).data;
-            if (response.error) {
-                throw new Error(response.error);
-            } else {
-                setStatus(response.status);
-            }
+            let response;
+            if (params === true) response = (await turn_on_led()).response;
+            else response = (await turn_off_led()).response;
+            setStatus(response);
         } catch {
             toaster.error(
                 `Error occured when trying to turn ${

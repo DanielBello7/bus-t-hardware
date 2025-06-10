@@ -1,112 +1,102 @@
-/** FOR THE NFC RFC522 HARDWARE */
-import { FormEvent, useRef, useState } from 'react';
-import { OptionBox } from '../options-box';
-import { useSettings } from '@/store';
-import { toaster } from '@/store';
-import { ensure_error } from '@/lib/ensure-error';
+/** NFC PN532 READER */
 import { Button, Input } from '@/components';
+import { OptionBox } from '../options-box';
+import { FormEvent, useRef, useState } from 'react';
 import { Loader } from 'lucide-react';
-import axios from 'axios';
 import classnames from 'classnames';
+import { toaster, useSettings } from '@/store';
+import { ensure_error } from '@/lib/ensure-error';
+import axios from 'axios';
+import { read_using_pn532m, write_using_pn532 } from '@/api/pn532M';
 
-export function NFC() {
+export function PN532() {
     const [isReading, setIsReading] = useState(false);
     const [isWriting, setIsWriting] = useState(false);
+
     const [data, setdata] = useState('');
 
+    /** read abort */
     const rAbort = useRef<AbortController | null>(null);
 
+    /** write abort */
     const wAbort = useRef<AbortController | null>(null);
 
     const settings = useSettings((state) => state);
 
-    /** cancel the read request */
     const cancel_r = () => {
         if (rAbort.current) {
             rAbort.current.abort();
-            toaster.error('Cancel Error: Canceled Read Request');
             setIsReading(false);
+            toaster.error('Cancel Error: Reading Canceled');
         }
     };
 
-    /** cancel the write request */
     const cancel_w = (e: FormEvent) => {
         e.preventDefault();
 
         if (wAbort.current) {
             wAbort.current.abort();
-            toaster.error('Cancel Error: Canceled Write Request');
             setIsWriting(false);
+            toaster.error('Cancel Error: Writing Canceled');
         }
     };
 
-    /** read data from card */
     const r_data = async () => {
         if (settings.data.connected == false) {
             return toaster.error('Connection Error: Not Connected to API');
         }
-
         if (isReading || isWriting) return;
-
         setIsReading(true);
+
         rAbort.current = new AbortController();
 
         try {
             const response = (
-                await axios.get(`${settings.data.url}/api/rfc522/read`, {
-                    signal: rAbort.current.signal,
-                })
-            ).data;
-            toaster.alert(JSON.stringify(response.response));
+                await read_using_pn532m(rAbort.current.signal)
+            ).response;
+            toaster.alert(response);
         } catch (e) {
             const err = ensure_error(e);
-            toaster.error(`Error occured when reading: ${err.message}`);
+            toaster.error(`Error Occured: ${err.message}`);
         } finally {
             setIsReading(false);
-            rAbort.current = null;
         }
     };
 
-    /** write data into the card */
     const w_data = async (e: FormEvent) => {
         e.preventDefault();
 
-        if (!settings.data.connected) {
+        if (settings.data.connected === false) {
             return toaster.error('Connection Error: Not Connected to API');
         }
         if (!data.trim()) {
-            return toaster.error('Cannot write empty data into tag');
+            return toaster.error('Input Error: Type in something');
         }
-
         if (isReading || isWriting) return;
         setIsWriting(true);
 
         wAbort.current = new AbortController();
         try {
-            const response = await axios.post(
-                `${settings.data.url}/api/rfc522/write`,
-                { text: data },
-                { signal: wAbort.current.signal }
-            );
-            toaster.alert(response.data.msg);
+            const response = (
+                await write_using_pn532(
+                    { text: data },
+                    wAbort.current.signal
+                )
+            ).response;
+            toaster.alert(`Success Writing Data!: ${response}`);
         } catch (e) {
             const err = ensure_error(e);
-            toaster.error(`Error occured when writing: ${err.message}`);
+            toaster.error(`Error Occured: ${err.message}`);
         } finally {
             setIsWriting(false);
         }
     };
 
     return (
-        <OptionBox
-            type="rectangle-ellipsis"
-            title="NFC"
-            sub="RFC522"
-            key={'NFC'}
-        >
+        <OptionBox sub="PN532" title="NFC" type="asscending" key={'NFC'}>
             <div className="w-full flex flex-col">
                 <p className="px-2">
-                    Read/Write data using the RFC522 RFID hat
+                    Read/Write data using the PN532 NFC hardware
                 </p>
 
                 <div className="w-full flex items-center space-x-3 mt-3 border-t border-b p-2">
@@ -114,10 +104,11 @@ export function NFC() {
                         className="cursor-pointer"
                         disabled={(isReading || isWriting) && true}
                         type="submit"
-                        form="form-1"
+                        form="form-2"
+                        variant={isWriting ? 'destructive' : 'default'}
                     >
                         {isWriting && <Loader className="animate-spin" />}
-                        Write
+                        {isWriting ? 'Cancel' : 'Write'}
                     </Button>
                     <Button
                         className={classnames({
@@ -137,7 +128,7 @@ export function NFC() {
 
                 <form
                     onSubmit={isWriting ? cancel_w : w_data}
-                    id="form-1"
+                    id="form-2"
                     className="rounded-b flex flex-col pb-0 bg-white"
                 >
                     <p className="text-[0.6rem] mb-1 martian-exlight px-2 pt-2">

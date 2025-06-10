@@ -4,10 +4,10 @@ import { OptionBox } from '../options-box';
 import { useState } from 'react';
 import { toaster, useSettings } from '@/store';
 import { ensure_error } from '@/lib/ensure-error';
-import axios from 'axios';
 import { Loader } from 'lucide-react';
 import { Label } from '@radix-ui/react-label';
 import { get_percent } from '@/components/percent';
+import { mcp3008_percentage } from '@/api/mcp3008';
 
 export function MCP3008() {
     const [isLoading, setIsLoading] = useState(false);
@@ -22,10 +22,8 @@ export function MCP3008() {
         setIsLoading(true);
 
         try {
-            const response = await axios.get(
-                `${settings.data.url}/api/mcp3008/level`
-            );
-            setPercentage(response.data.percentage);
+            const response = (await mcp3008_percentage()).response;
+            setPercentage(response.percentage);
             toaster.alert('Success');
         } catch (e) {
             const err = ensure_error(e);

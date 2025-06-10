@@ -7,7 +7,7 @@ import { ensure_error } from '@/lib/ensure-error';
 import { Loader } from 'lucide-react';
 import { Label } from '@radix-ui/react-label';
 import { get_percent } from '@/components/percent';
-import axios from 'axios';
+import { ads1115_percentage } from '@/api/ads1115';
 
 export function ADS1115() {
     const [isLoading, setIsLoading] = useState(false);
@@ -23,10 +23,8 @@ export function ADS1115() {
         setIsLoading(true);
 
         try {
-            const response = await axios.get(
-                `${settings.data.url}/api/ads1115/level`
-            );
-            setPercentage(response.data.percentage);
+            const response = (await ads1115_percentage()).response;
+            setPercentage(response.percentage);
             toaster.alert('Success');
         } catch (e) {
             const err = ensure_error(e);

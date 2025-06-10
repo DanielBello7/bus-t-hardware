@@ -7,7 +7,7 @@ import { useSettings } from '@/store';
 import { useState } from 'react';
 import { OptionBox } from '../options-box';
 import { Loader, Locate } from 'lucide-react';
-import axios from 'axios';
+import { get_location as get_current_location } from '@/api/neo_6mM';
 
 export function GPS() {
     const [isLoading, setIsLoading] = useState(false);
@@ -22,10 +22,8 @@ export function GPS() {
 
         setIsLoading(true);
         try {
-            const response = (
-                await axios.get(`${settings.data.url}/api/gps/location`)
-            ).data;
-            setCoords(response);
+            const response = (await get_current_location()).response;
+            setCoords(`${response.latitude}, ${response.longitude}`);
             toaster.alert('Success!');
         } catch (e) {
             const err = ensure_error(e);

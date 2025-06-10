@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button';
-import { FormEvent, useCallback, useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { ensure_error } from '@/lib/ensure-error';
 import { Ellipsis, Save } from 'lucide-react';
@@ -8,12 +8,8 @@ import { useSheet } from './use-sheet';
 import { useSettings } from '@/store';
 import { toaster } from '@/store';
 import { AppSheet } from './sheet';
+import { ping } from '@/api';
 import z from 'zod';
-import axios from 'axios';
-
-type API_RES = {
-    response: string;
-};
 
 const schema = z.object({
     url: z.string().url().nonempty(),
@@ -36,9 +32,8 @@ export function Settings() {
 
         try {
             schema.parse(formdata);
-            const response = await axios.get(`${formdata.url}/ping`);
-            const res = response.data as unknown as API_RES;
-            if (res.response === 'ping') {
+            const response = (await ping()).response;
+            if (response === 'ping') {
                 toaster.alert('Connected');
                 settings.set_data({
                     url: formdata.url,
