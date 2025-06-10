@@ -8,8 +8,8 @@ import { useSheet } from './use-sheet';
 import { useSettings } from '@/store';
 import { toaster } from '@/store';
 import { AppSheet } from './sheet';
-import { ping } from '@/api';
 import z from 'zod';
+import axios from 'axios';
 
 const schema = z.object({
     url: z.string().url().nonempty(),
@@ -32,9 +32,9 @@ export function Settings() {
 
         try {
             schema.parse(formdata);
-            const response = await ping();
-            console.log('response', response);
-            if (response.response === 'ping') {
+            const response = (await axios.get(`${formdata.url}/ping/`))
+                .data.response;
+            if (response === 'ping') {
                 toaster.alert('Connected');
                 settings.set_data({
                     url: formdata.url,

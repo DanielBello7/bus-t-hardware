@@ -26,4 +26,4 @@ def index():
     for d in lst:
         od[d["created_at"]] = d
 
-    return jsonify({"response", lst}), 200
+    return jsonify({"response": lst}), 200

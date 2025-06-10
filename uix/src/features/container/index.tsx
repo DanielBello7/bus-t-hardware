@@ -12,8 +12,10 @@ export function Container() {
         <div className="w-full flex flex-col grow">
             <Header />
             <div className="flex grow flex-col overflow-scroll">
-                {data.map((i) => (
-                    <TabsContent value={i.id}>{i.content}</TabsContent>
+                {data.map((i, idx) => (
+                    <TabsContent value={i.id} key={idx}>
+                        {i.content}
+                    </TabsContent>
                 ))}
             </div>
         </div>

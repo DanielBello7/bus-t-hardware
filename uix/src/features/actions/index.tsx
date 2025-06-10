@@ -31,7 +31,7 @@ export function Actions() {
             <Toggle />
             <GPS />
             <ADS1115 />
-            <rfc522_nfc />
+            <RFC522_NFC />
             <PN532 />
             <MCP3008 />
             <GSM />

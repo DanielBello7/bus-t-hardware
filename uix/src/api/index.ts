@@ -1,5 +1,4 @@
 export * as ads1115 from './ads1115';
-export * from './app/ping';
 export * as gsm from './gsm';
 export * as led from './led';
 export * from './logs/get-logs';
