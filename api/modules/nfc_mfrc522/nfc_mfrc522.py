@@ -9,7 +9,7 @@ import threading
 """
 Module that helps in handling the operations for an NFC scanner running on
 the I2C port, you can perform multiple operations on this, including
-reading and writing onto nfc tags 
+reading and writing onto nfc tags
 """
 
 atexit.register(cleanup)
@@ -85,6 +85,7 @@ class NFC_MFRC522:
             def write_op():
                 try:
                     self.reader.write(text)
+                    result = {"result": text}
                 except Exception as e_inner:
                     result["error"] = str(e_inner)
 

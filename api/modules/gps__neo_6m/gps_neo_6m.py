@@ -7,7 +7,7 @@ from pprint import pprint
 from datetime import datetime
 
 """
-Module that helps in handling the operations for a GPS module on 
+Module that helps in handling the operations for a GPS module on
 the UART port.
 """
 
@@ -120,7 +120,7 @@ class GPS_NEO_6M:
             if not self.serial_port:
                 raise Exception("serial port not initialized")
 
-            return {"result": "idle" if self.thread.is_alive() else "inactive"}
+            return {"result": "idle" if self.thread.is_alive() else "active"}
         except Exception as e:
             error = str(e)
             pprint({"error": error})

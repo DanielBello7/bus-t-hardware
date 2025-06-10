@@ -34,7 +34,7 @@ class ADC_ADS1115:
             self.channel = None
             pprint(f"error occured: {error}")
 
-    def voltage_to_percent(self, v):
+    def _voltage_to_percent(self, v):
         if v >= 4.2:
             return 100
         elif v <= 3.0:
@@ -47,7 +47,7 @@ class ADC_ADS1115:
             try:
                 m_voltage = self.channel.voltage
                 a_voltage = m_voltage * (self.R1 + self.R2) / self.R2
-                percent = self.voltage_to_percent(a_voltage)
+                percent = self._voltage_to_percent(a_voltage)
                 data = {
                     "voltage": round(a_voltage, 2),
                     "percentage": percent,
@@ -82,7 +82,7 @@ class ADC_ADS1115:
                 raise Exception("not connected")
 
             if not self.thread or not self.thread.is_alive():
-                return {"result": "not running"}
+                raise Exception("not running")
 
             self.running = False
             self.thread.join(timeout=2)
