@@ -25,7 +25,7 @@ def insert_msg(msg):
 
 
 # read data from nfc
-@nfc_mfrc522_routes.route("/read", methods=["GET"])
+@nfc_mfrc522_routes.route("/read/", methods=["GET"])
 def read_from_nfc_card():
     global nfc
 
@@ -43,7 +43,7 @@ def read_from_nfc_card():
         return jsonify({"error": f"error occured: {error}"}), 400
 
 
-@nfc_mfrc522_routes.route("/write", methods=["POST"])
+@nfc_mfrc522_routes.route("/write/", methods=["POST"])
 def write_to_card():
     global is_busy, nfc
 
@@ -65,7 +65,7 @@ def write_to_card():
 
 
 # cancel nfc operations
-@nfc_mfrc522_routes.route("/cancel", methods=["GET"])
+@nfc_mfrc522_routes.route("/cancel/", methods=["GET"])
 def cancel_operation():
     global is_busy, nfc
 
@@ -81,7 +81,7 @@ def cancel_operation():
         return jsonify({"error": f"error occured: {error}"}), 400
 
 
-@nfc_mfrc522_routes.route("/status", methods=["GET"])
+@nfc_mfrc522_routes.route("/status/", methods=["GET"])
 def status():
     global nfc
 

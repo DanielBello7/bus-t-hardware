@@ -21,7 +21,7 @@ def insert_msg(msg):
     )
 
 
-@nfc_pn532_routes.route("/stats", methods=["GET"])
+@nfc_pn532_routes.route("/stats/", methods=["GET"])
 def get_hat_status():
     global nfc
 
@@ -35,7 +35,7 @@ def get_hat_status():
         return jsonify({"error": f"error occured: {error}"}), 400
 
 
-@nfc_pn532_routes.route("/write", methods=["POST"])
+@nfc_pn532_routes.route("/write/", methods=["POST"])
 def write_to_card():
     global nfc
 
@@ -57,7 +57,7 @@ def write_to_card():
         return jsonify({"error": f"error occured: {error}"}), 400
 
 
-@nfc_pn532_routes.route("/reads", methods=["GET"])
+@nfc_pn532_routes.route("/reads/", methods=["GET"])
 def read_from_card():
     global nfc
 
@@ -75,7 +75,7 @@ def read_from_card():
         return jsonify({"error": f"error occured: {error}"}), 400
 
 
-@nfc_pn532_routes.route("/pause", methods=["GET"])
+@nfc_pn532_routes.route("/pause/", methods=["GET"])
 def cancel():
     global nfc
     try:

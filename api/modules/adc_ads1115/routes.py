@@ -23,7 +23,7 @@ def insert_msg(msg):
     )
 
 
-@adc_ads1115_routes.route("/start", methods=["GET"])
+@adc_ads1115_routes.route("/start/", methods=["GET"])
 def start():
     global battery
 
@@ -41,7 +41,7 @@ def start():
         return jsonify({"error": f"error occured: {error}"}), 400
 
 
-@adc_ads1115_routes.route("/level", methods=["GET"])
+@adc_ads1115_routes.route("/level/", methods=["GET"])
 def level():
     global battery
 
@@ -59,7 +59,7 @@ def level():
         return jsonify({"error": f"error occured: {error}"}), 400
 
 
-@adc_ads1115_routes.route("/pause", methods=["GET"])
+@adc_ads1115_routes.route("/pause/", methods=["GET"])
 def pause():
     global battery
 

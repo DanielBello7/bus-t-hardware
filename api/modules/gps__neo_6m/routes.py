@@ -21,7 +21,7 @@ def insert_msg(msg):
     )
 
 
-@gps_routes.route("/location", methods=["GET"])
+@gps_routes.route("/location/", methods=["GET"])
 def get_location():
     global gps
 
@@ -38,7 +38,7 @@ def get_location():
         return jsonify({"error": f"error occurred: {error}"}), 400
 
 
-@gps_routes.route("/last_saved", methods=["GET"])
+@gps_routes.route("/last_saved/", methods=["GET"])
 def get_last_saved():
     global gps
 
@@ -55,7 +55,7 @@ def get_last_saved():
         return jsonify({"error": f"error occurred: {error}"}), 400
 
 
-@gps_routes.route("/stream", methods=["GET"])
+@gps_routes.route("/stream/", methods=["GET"])
 def stream_location():
     global gps
 
@@ -72,7 +72,7 @@ def stream_location():
         return jsonify({"error": f"error occurred: {error}"}), 400
 
 
-@gps_routes.route("/cancel_stream", methods=["GET"])
+@gps_routes.route("/cancel_stream/", methods=["GET"])
 def stop_streaming():
     global gps
 
@@ -89,7 +89,7 @@ def stop_streaming():
         return jsonify({"error": f"error occurred: {error}"}), 400
 
 
-@gps_routes.route("/status", methods=["GET"])
+@gps_routes.route("/status/", methods=["GET"])
 def streaming_status():
     global gps
 

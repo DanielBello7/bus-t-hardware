@@ -23,7 +23,7 @@ def insert_msg(msg):
     )
 
 
-@adc_mcp3008_routes.route("/level", methods=["GET"])
+@adc_mcp3008_routes.route("/level/", methods=["GET"])
 def get_level():
     global battery
 
@@ -40,7 +40,7 @@ def get_level():
         return jsonify({"error": f"error occured: {error}"}), 400
 
 
-@adc_mcp3008_routes.route("/start", methods=["GET"])
+@adc_mcp3008_routes.route("/start/", methods=["GET"])
 def start_reading():
     global battery
 
@@ -57,7 +57,7 @@ def start_reading():
         return jsonify({"error": f"error occured: {error}"}), 400
 
 
-@adc_mcp3008_routes.route("/pause", methods=["GET"])
+@adc_mcp3008_routes.route("/pause/", methods=["GET"])
 def stop_reading():
     global battery
 
