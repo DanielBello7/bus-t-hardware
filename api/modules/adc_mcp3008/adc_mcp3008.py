@@ -4,7 +4,7 @@ import busio  # type: ignore
 import digitalio  # type: ignore
 import board  # type: ignore
 import threading
-from adafruit_mcp3xxx.mcp3008 import MCP3008,  # type: ignore
+from adafruit_mcp3xxx.mcp3008 import MCP3008  # type: ignore
 from adafruit_mcp3xxx.mcp3xxx import P0  # type: ignore
 from adafruit_mcp3xxx.analog_in import AnalogIn  # type: ignore
 from time import sleep
