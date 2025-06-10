@@ -4,7 +4,7 @@ import busio  # type: ignore
 import digitalio  # type: ignore
 import board  # type: ignore
 import threading
-from adafruit_mcp3xxx.mcp3008 import MCP3008  # type: ignore
+from adafruit_mcp3xxx.mcp3008 import MCP3008, PO, P1  # type: ignore
 from adafruit_mcp3xxx.analog_in import AnalogIn  # type: ignore
 from time import sleep
 from pprint import pprint
@@ -23,7 +23,7 @@ class ADC_MCP3008:
             self.spi = busio.SPI(clock=board.SCK, MISO=board.MISO, MOSI=board.MOSI)
             self.cs = digitalio.DigitalInOut(board.D8)
             self.mcp = MCP3008(self.spi, self.cs)
-            self.channel = AnalogIn(self.mcp, MCP3008.P0)
+            self.channel = AnalogIn(self.mcp, PO)
 
             self.R1 = 10000
             self.R2 = 10000
