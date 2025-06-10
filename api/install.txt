@@ -1,0 +1,17 @@
+pip install flask
+pip install pyserial
+pip install flask_cors
+pip install flask_socketio
+pip install board
+pip install adafruit-blinka
+pip install adafruit-circuitpython-ads1x15
+pip install adafruit-circuitpython-mcp3xxx
+pip install pynmea2
+pip install pyserial
+pip install gpiozero
+pip install tinydb
+pip install spydev
+pip install RPi.GPIO
+pip install adafruit-circuitpython-pn532
+pip install mfrc522
+pip install gunicorn
