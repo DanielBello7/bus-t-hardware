@@ -1,3 +1,7 @@
+# INSTALL INSTRUCTIONS
+due to development restrictions a requirements.txt file wasn't generated but an install list was,
+so items on the install.txt are to be installed accordingly on the raspberry-pi before it can work.
+
 # API ENDPOINTS
 
 ## ADS1115 (ANALOG TO DIGITAL CONVERTER FOR BATTERY LEVEL)

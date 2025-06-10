@@ -29,7 +29,7 @@ app.register_blueprint(nfc_pn532_routes)
 app.register_blueprint(nfc_mfrc522_routes)
 
 
-@app.route("/ping")
+@app.route("/ping/")
 def ping():
     return {"response": "ping"}
 
