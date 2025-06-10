@@ -32,8 +32,9 @@ export function Settings() {
 
         try {
             schema.parse(formdata);
-            const response = (await ping()).response;
-            if (response === 'ping') {
+            const response = await ping();
+            console.log('response', response);
+            if (response.response === 'ping') {
                 toaster.alert('Connected');
                 settings.set_data({
                     url: formdata.url,
