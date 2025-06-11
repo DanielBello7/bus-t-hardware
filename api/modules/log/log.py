@@ -1,7 +1,7 @@
 """"""
 
 from datetime import datetime, timedelta
-import tinydb
+import tinydb  # type:ignore
 
 
 class Log:

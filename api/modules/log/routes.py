@@ -1,6 +1,6 @@
 """"""
 
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify  # type:ignore
 from .logger import logger
 from collections import OrderedDict
 
@@ -15,15 +15,33 @@ def index():
     (e.g. http://localhost/api/led/logs?limit=50)
     """
     num = int(request.args.get("limit") or 60)
+    pge = int(request.args.get("page", 1))
+    offset = (pge - 1) * num
 
     # the log returns a list of JSON objects, but must be a single JSON object
-    lst = logger.get_log(num)
+    all_logs = logger.get_log(num)
+    total = len(all_logs)
+
+    paginated_logs = all_logs[offset : offset + num]
 
     # create OrderedDict to preserve time order of elements
     # since each log entry must have a top-level key in the wrapper JSON object
     # that will be the created_at value, which also remains inside the object
     od = OrderedDict()
-    for d in lst:
+    for d in paginated_logs:
         od[d["created_at"]] = d
 
-    return jsonify({"response": lst}), 200
+    return (
+        jsonify(
+            {
+                "response": paginated_logs,
+                "pagination": {
+                    "total": total,
+                    "limit": num,
+                    "page": pge,
+                    "pages": (total + num - 1) // num,  # total number of pages
+                },
+            }
+        ),
+        200,
+    )

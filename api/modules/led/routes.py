@@ -78,7 +78,7 @@ def blink_lights():
         Blinks the light, limited by duration parameter
         (e.g. http://localhost/api/led/blink?duration=3)
         """
-        dur = int(request.args.get("duration") or 3)
+        dur = int(request.args.get("duration") or 5)
 
         r = led.blink_lights(dur)
 
