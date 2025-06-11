@@ -61,6 +61,7 @@ class NFC_MFRC522:
 
                 if p.is_alive():
                     p.terminate()
+                    cleanup()
                     result["error"] = "no card detected"
 
                 if "error" in result:
@@ -104,6 +105,7 @@ class NFC_MFRC522:
 
                 if p.is_alive():
                     p.terminate()
+                    cleanup()
                     result["error"] = "Timeout — no card detected"
 
                 if "error" in result:
