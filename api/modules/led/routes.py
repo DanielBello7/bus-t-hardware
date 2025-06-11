@@ -30,6 +30,7 @@ def turn_led_off():
         r = led.turn_off()
 
         if not r.get("result"):
+            print(str(r))
             raise Exception(r.get("error", "unknown error when turning led off"))
 
         insert_msg("turning off the led")
@@ -59,7 +60,7 @@ def turn_led_on():
 
 # get the current status of the lights
 @led_routes.route("/status/", methods=["GET"])
-def index():
+def get_status():
     try:
         r = led.is_on
 
