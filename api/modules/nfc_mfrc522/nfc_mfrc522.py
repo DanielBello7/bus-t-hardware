@@ -21,7 +21,7 @@ class NFC_MFRC522:
         try:
             self.timeout = timeout
             self.is_busy = False
-            self._probe_reader()
+            # self._probe_reader()
         except Exception as e:
             error = str(e)
             pprint(f"Error occured: {error}")
