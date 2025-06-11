@@ -25,7 +25,7 @@ def insert_msg(msg):
 
 
 # read data from nfc
-@nfc_mfrc522_routes.route("/read/", methods=["GET"])
+@nfc_mfrc522_routes.route("/reads/", methods=["GET"])
 def read_from_nfc_card():
     global nfc
 
@@ -65,7 +65,7 @@ def write_to_card():
 
 
 # cancel nfc operations
-@nfc_mfrc522_routes.route("/cancel/", methods=["GET"])
+@nfc_mfrc522_routes.route("/pause/", methods=["GET"])
 def cancel_operation():
     global is_busy, nfc
 
