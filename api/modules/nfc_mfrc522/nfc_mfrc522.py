@@ -69,7 +69,7 @@ class NFC_MFRC522:
                 raise Exception("reader not initialized")
 
             cleanup()
-            return {"result": "canceled"}
+            return {"result": "idle" if self.is_busy else "canceled"}
         except Exception as e:
             error = str(e)
             pprint(f"Error occured: {error}")
