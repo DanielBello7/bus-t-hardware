@@ -3,8 +3,8 @@
 from mfrc522 import SimpleMFRC522  # type: ignore
 from RPi.GPIO import cleanup  # type: ignore
 from pprint import pprint
+from multiprocessing import Process, Manager
 import atexit
-import threading
 
 """
 Module that helps in handling the operations for an NFC scanner running on
@@ -26,38 +26,53 @@ class NFC_MFRC522:
             pprint(f"Error occured: {error}")
             self.reader = None
 
+    def _safe_read(self, result):
+        try:
+            reader = SimpleMFRC522()
+            id, data = reader.read()
+            result["result"] = {"id": id, "data": data}
+        except Exception as e:
+            result["error"] = str(e)
+        finally:
+            cleanup()
+
+    def _safe_write(self, result, text):
+        try:
+            reader = SimpleMFRC522()
+            reader.write(text)
+            result["result"] = text
+        except Exception as e:
+            result["error"] = str(e)
+        finally:
+            cleanup()
+
     def reads(self):
         try:
             if not self.reader:
                 raise Exception("reader not initialized")
 
-            result = {}
-
-            def read_op():
-                try:
-                    id, data = self.reader.read()
-                    result["result"] = {"id": id, "data": data}
-                except Exception as e_inner:
-                    result["error"] = str(e_inner)
-
             self.is_busy = True
-            thread = threading.Thread(target=read_op)
-            thread.start()
-            thread.join(timeout=self.timeout)
 
-            if thread.is_alive():
-                raise Exception("no card detected")
+            with Manager() as manager:
+                result = manager.dict()
+                p = Process(target=self._safe_read, args=(result,))
+                p.start()
+                p.join(self.timeout)
 
-            if "error" in result:
-                raise Exception(result["error"])
+                if p.is_alive():
+                    p.terminate()
+                    result["error"] = "no card detected"
 
-            self.is_busy = False
-            return result
+                if "error" in result:
+                    raise Exception(result["error"])
+                return dict(result)
         except Exception as e:
             self.is_busy = False
             error = str(e)
             pprint(f"Error occured: {error}")
             return {"error": f"error occured: {error}"}
+        finally:
+            self.is_busy = False
 
     def pause(self):
         """
@@ -79,34 +94,29 @@ class NFC_MFRC522:
         try:
             if not self.reader:
                 raise Exception("reader not initialized")
-
-            result = {}
-
-            def write_op():
-                try:
-                    self.reader.write(text)
-                    result = {"result": text}
-                except Exception as e_inner:
-                    result["error"] = str(e_inner)
-
             self.is_busy = True
-            thread = threading.Thread(target=write_op)
-            thread.start()
-            thread.join(timeout=self.timeout)
 
-            if thread.is_alive():
-                raise Exception("no card detected")
+            with Manager() as manager:
+                result = manager.dict()
+                p = Process(target=self._safe_write, args=(result, text))
+                p.start()
+                p.join(self.timeout)
 
-            if "error" in result:
-                raise Exception(result["error"])
+                if p.is_alive():
+                    p.terminate()
+                    result["error"] = "Timeout — no card detected"
 
-            self.is_busy = False
-            return result
+                if "error" in result:
+                    raise Exception(result["error"])
+
+                return dict(result)
         except Exception as e:
             self.is_busy = False
             error = str(e)
             pprint(f"Error occured: {error}")
             return {"error": f"error occured: {error}"}
+        finally:
+            self.is_busy = False
 
 
 if __name__ == "__main__":
