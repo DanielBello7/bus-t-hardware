@@ -18,13 +18,11 @@ atexit.register(cleanup)
 class NFC_MFRC522:
     def __init__(self, timeout):
         try:
-            self.reader = SimpleMFRC522()
             self.timeout = timeout
             self.is_busy = False
         except Exception as e:
             error = str(e)
             pprint(f"Error occured: {error}")
-            self.reader = None
 
     def _safe_write(self, result, text):
         try:
@@ -48,8 +46,8 @@ class NFC_MFRC522:
 
     def reads(self):
         try:
-            if not self.reader:
-                raise Exception("reader not initialized")
+            # if not self.reader:
+            #     raise Exception("reader not initialized")
 
             self.is_busy = True
 
@@ -79,8 +77,8 @@ class NFC_MFRC522:
         Just calls GPIO cleanup, but cannot interrupt `reader.read()` directly.
         """
         try:
-            if not self.reader:
-                raise Exception("reader not initialized")
+            # if not self.reader:
+            #     raise Exception("reader not initialized")
 
             cleanup()
             return {"result": "idle" if self.is_busy else "canceled"}
@@ -91,8 +89,9 @@ class NFC_MFRC522:
 
     def write(self, text="Hello NFC!"):
         try:
-            if not self.reader:
-                raise Exception("reader not initialized")
+            # if not self.reader:
+            #     raise Exception("reader not initialized")
+
             self.is_busy = True
 
             with Manager() as manager:
