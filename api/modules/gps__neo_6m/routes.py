@@ -1,7 +1,7 @@
 """"""
 
 from modules.log.logger import logger
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify  # type: ignore
 from datetime import datetime
 from inspect import currentframe
 from .gps_neo_6m import GPS_NEO_6M

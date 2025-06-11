@@ -18,7 +18,17 @@ class GPS_NEO_6M:
             self.last_data = {}
             self.thread = None
             self.stop_event = threading.Event()
-            self.serial_port = serial.Serial(port, baudrate=baudrate, timeout=timeout)
+
+            # Attempt to open the port
+            sp = serial.Serial(port, baudrate=baudrate, timeout=timeout)
+
+            # Try a test read to see if there's actual data
+            test = sp.readline()
+            if not test:
+                raise Exception("No data from GPS device")
+
+            # If it works, assign to self.serial_port
+            self.serial_port = sp
         except Exception as e:
             self.stop_event = None
             self.serial_port = None
