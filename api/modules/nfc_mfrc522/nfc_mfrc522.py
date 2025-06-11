@@ -5,6 +5,7 @@ from RPi.GPIO import cleanup  # type: ignore
 from pprint import pprint
 from multiprocessing import Process, Manager
 import atexit
+import time
 
 """
 Module that helps in handling the operations for an NFC scanner running on
@@ -20,9 +21,36 @@ class NFC_MFRC522:
         try:
             self.timeout = timeout
             self.is_busy = False
+            self._probe_reader()
         except Exception as e:
             error = str(e)
             pprint(f"Error occured: {error}")
+
+    def _probe_reader(self):
+        def check(result):
+            try:
+                reader = SimpleMFRC522()
+                result["ready"] = True
+            except Exception as e:
+                result["error"] = str(e)
+            finally:
+                cleanup()
+
+        from multiprocessing import Manager, Process
+
+        with Manager() as manager:
+            result = manager.dict()
+            p = Process(target=check, args=(result,))
+            p.start()
+            p.join(2.0)
+
+            if p.is_alive():
+                p.terminate()
+                p.join()
+                raise Exception("Timeout probing NFC reader")
+
+            if "error" in result:
+                raise Exception(result["error"])
 
     def _safe_write(self, result, text):
         try:
@@ -59,6 +87,8 @@ class NFC_MFRC522:
 
                 if p.is_alive():
                     p.terminate()
+                    p.join()
+                    time.sleep(0.3)
                     result["error"] = "no card detected"
 
                 if "error" in result:
