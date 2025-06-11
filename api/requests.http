@@ -58,7 +58,7 @@ GET http://10.0.0.188:5500/api/led/on/
 GET http://10.0.0.188:5500/api/led/off/ 
 
 ###
-GET http://10.0.0.188:5500/api/led/blink/ 
+GET http://10.0.0.188:5500/api/led/blink?duration=10 
 
 ###
 GET http://10.0.0.188:5500/api/led/status/ 
