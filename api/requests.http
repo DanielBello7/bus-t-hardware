@@ -94,10 +94,10 @@ GET http://10.0.0.188:5500/api/pn532/stats/
 
 
 ###  RFID RFC522-----------------------------------------------------------
-GET http://10.0.0.188:5500/api/rfc522/reads/
+GET http://10.0.0.188:5500/api/mfrc522/reads/
 
 ###
-POST http://10.0.0.188:5500/api/rfc522/write/
+POST http://10.0.0.188:5500/api/mfrc522/write/
 Content-Type: application/json
 Accept: application/json
 
@@ -106,10 +106,10 @@ Accept: application/json
 }
 
 ###
-GET http://10.0.0.188:5500/api/rfc522/pause/
+GET http://10.0.0.188:5500/api/mfrc522/pause/
 
 ###
-GET http://10.0.0.188:5500/api/rfc522/stats/
+GET http://10.0.0.188:5500/api/mfrc522/stats/
 
 
 

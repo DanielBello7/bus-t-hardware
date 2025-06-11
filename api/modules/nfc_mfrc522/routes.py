@@ -81,7 +81,7 @@ def cancel_operation():
         return jsonify({"error": error}), 400
 
 
-@nfc_mfrc522_routes.route("/status/", methods=["GET"])
+@nfc_mfrc522_routes.route("/stats/", methods=["GET"])
 def status():
     global nfc
 

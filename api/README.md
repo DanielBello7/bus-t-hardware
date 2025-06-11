@@ -42,10 +42,10 @@ so items on the install.txt are to be installed accordingly on the raspberry-pi 
 4. http://localhost:5500/api/pn532/stats/ --------[GET]  ---✅
 
 ##  RFID RFC522
-1. http://localhost:5500/api/rfc522/reads/ -------[GET] ----✅
-2. http://localhost:5500/api/rfc522/write/ -------[POST] ---✅
-3. http://localhost:5500/api/rfc522/pause/ -------[GET]  ---✅
-4. http://localhost:5500/api/rfc522/stats/ -------[GET]  ---✅
+1. http://localhost:5500/api/mfrc522/reads/ ------[GET] ----✅
+2. http://localhost:5500/api/mfrc522/write/ ------[POST] ---✅
+3. http://localhost:5500/api/mfrc522/pause/ ------[GET]  ---✅
+4. http://localhost:5500/api/mfrc522/stats/ ------[GET]  ---✅
 
 ## APP
 1. http://localhost:5500/ping/ -------------------[GET] ----✅
