@@ -24,6 +24,10 @@ class ADC_ADS1115:
             self.ads = ADS1115(self.i2c)
             self.channel = AnalogIn(self.ads, ADS1115.P0)  # or P1, P2, P3
 
+            _ = self.channel.value  # or self.channel.voltage
+            if _ == 0:
+                raise Exception("adc read returned 0 — possibly no device connected")
+
             self.R1 = 10000
             self.R2 = 10000
             self.thread = None
@@ -61,7 +65,7 @@ class ADC_ADS1115:
     def listen(self):
         try:
             if not self.channel:
-                raise Exception("not connected")
+                raise Exception("device not connected")
 
             if self.thread and self.thread.is_alive():
                 return {"result": "already running"}
@@ -79,7 +83,7 @@ class ADC_ADS1115:
     def stop_listen(self):
         try:
             if not self.channel:
-                raise Exception("not connected")
+                raise Exception("device not connected")
 
             if not self.thread or not self.thread.is_alive():
                 raise Exception("not running")
@@ -95,7 +99,7 @@ class ADC_ADS1115:
     def percentage(self):
         try:
             if not self.channel:
-                raise Exception("not connected")
+                raise Exception("device not connected")
             return dict(self.ptg)
         except Exception as e:
             pprint(f"error occurred: {str(e)}")

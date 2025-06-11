@@ -1,6 +1,6 @@
 """"""
 
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify  # type: ignore
 from modules.log.logger import logger
 from datetime import datetime
 from inspect import currentframe
@@ -32,7 +32,7 @@ def get_hat_status():
     except Exception as e:
         error = str(e)
         insert_msg(error)
-        return jsonify({"error": f"error occured: {error}"}), 400
+        return jsonify({"error": error}), 400
 
 
 @nfc_pn532_routes.route("/write/", methods=["POST"])
@@ -54,7 +54,7 @@ def write_to_card():
     except Exception as e:
         error = str(e)
         insert_msg(error)
-        return jsonify({"error": f"error occured: {error}"}), 400
+        return jsonify({"error": error}), 400
 
 
 @nfc_pn532_routes.route("/reads/", methods=["GET"])
@@ -72,7 +72,7 @@ def read_from_card():
     except Exception as e:
         error = str(e)
         insert_msg(error)
-        return jsonify({"error": f"error occured: {error}"}), 400
+        return jsonify({"error": error}), 400
 
 
 @nfc_pn532_routes.route("/pause/", methods=["GET"])
@@ -89,4 +89,4 @@ def cancel():
     except Exception as e:
         error = str(e)
         insert_msg(error)
-        return jsonify({"error": f"error occured: {error}"}), 400
+        return jsonify({"error": error}), 400

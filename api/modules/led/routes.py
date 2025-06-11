@@ -37,7 +37,7 @@ def turn_led_off():
     except Exception as e:
         error = str(e)
         insert_msg(error)
-        return jsonify({"error": f"error occured: {error}"}), 400
+        return jsonify({"error": error}), 400
 
 
 # turn on the lights
@@ -54,7 +54,7 @@ def turn_led_on():
     except Exception as e:
         error = str(e)
         insert_msg(error)
-        return jsonify({"error": f"error occured: {error}"}), 400
+        return jsonify({"error": error}), 400
 
 
 # get the current status of the lights
@@ -67,7 +67,7 @@ def get_status():
     except Exception as e:
         error = str(e)
         insert_msg(error)
-        return jsonify({"error": f"error occured: {error}"}), 400
+        return jsonify({"error": error}), 400
 
 
 # blink the lights
@@ -90,7 +90,7 @@ def blink_lights():
     except Exception as e:
         error = str(e)
         insert_msg(error)
-        return jsonify({"error": f"error occured: {error}"}), 400
+        return jsonify({"error": error}), 400
 
 
 """"""

@@ -1,6 +1,6 @@
 """"""
 
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify  # type: ignore
 from modules.log.logger import logger
 from datetime import datetime
 from inspect import currentframe
@@ -40,7 +40,7 @@ def read_from_nfc_card():
     except Exception as e:
         error = str(e)
         insert_msg(error)
-        return jsonify({"error": f"error occured: {error}"}), 400
+        return jsonify({"error": error}), 400
 
 
 @nfc_mfrc522_routes.route("/write/", methods=["POST"])
@@ -61,7 +61,7 @@ def write_to_card():
     except Exception as e:
         error = str(e)
         insert_msg(error)
-        return jsonify({"error": f"error occured: {error}"}), 400
+        return jsonify({"error": error}), 400
 
 
 # cancel nfc operations
@@ -78,7 +78,7 @@ def cancel_operation():
     except Exception as e:
         error = str(e)
         insert_msg(error)
-        return jsonify({"error": f"error occured: {error}"}), 400
+        return jsonify({"error": error}), 400
 
 
 @nfc_mfrc522_routes.route("/status/", methods=["GET"])
@@ -91,4 +91,4 @@ def status():
     except Exception as e:
         error = str(e)
         insert_msg(error)
-        return jsonify({"error": f"error occured: {error}"}), 400
+        return jsonify({"error": error}), 400

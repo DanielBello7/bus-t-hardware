@@ -10,7 +10,7 @@ GET http://10.0.0.188:5500/api/ads1115/pause/
 
 
 
-### MCP3008 (ANALOG TO DIGITAL CONVERTER FOR BATTERY LEVEL)----------------
+### ✅MCP3008 (ANALOG TO DIGITAL CONVERTER FOR BATTERY LEVEL)--------------
 GET http://10.0.0.188:5500/api/mcp3008/level/
 
 ### 
@@ -21,7 +21,7 @@ GET http://10.0.0.188:5500/api/mcp3008/pause/
 
 
 
-### ✅GPS--------------------------------------------------------------------
+### ✅GPS------------------------------------------------------------------
 GET http://10.0.0.188:5500/api/gps/location/ 
 
 ###
