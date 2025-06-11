@@ -41,7 +41,8 @@ class Log:
                 print(f"created_at {r['created_at']}")
 
     def get_all_logs(self):
-        return self.db.all()
+        sorted_records = sorted(self.db.all(), key=lambda k: k["created_at"])
+        return sorted_records
 
     def get_log(self, n=1000):
         """Return the last n log entries"""
