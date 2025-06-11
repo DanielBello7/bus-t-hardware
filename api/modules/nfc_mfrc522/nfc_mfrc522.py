@@ -72,7 +72,6 @@ class NFC_MFRC522:
             return {"error": f"error occured: {error}"}
         finally:
             self.is_busy = False
-            cleanup()
 
     def pause(self):
         """
@@ -104,7 +103,6 @@ class NFC_MFRC522:
 
                 if p.is_alive():
                     p.terminate()
-                    cleanup()
                     result["error"] = "Timeout — no card detected"
 
                 if "error" in result:
@@ -118,7 +116,6 @@ class NFC_MFRC522:
             return {"error": f"error occured: {error}"}
         finally:
             self.is_busy = False
-            cleanup()
 
 
 if __name__ == "__main__":
