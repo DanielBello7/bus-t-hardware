@@ -62,7 +62,7 @@ class LED:
 
             self.led.blink()
             sleep(dur)
-            self.pulse._stop_blink()
+            self.led._stop_blink()
             self.is_on = True
             return {"result": "off" if not self.is_on else "on"}
         except Exception as e:

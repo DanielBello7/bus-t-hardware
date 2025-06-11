@@ -62,12 +62,8 @@ def turn_led_on():
 def get_status():
     try:
         r = led.is_on
-
-        if not r.get("result"):
-            raise Exception(r.get("error", "unknown error when getting led status"))
-
         insert_msg("getting led status")
-        return jsonify({"response": r}), 200
+        return jsonify({"response": "on" if r is True else "off"}), 200
     except Exception as e:
         error = str(e)
         insert_msg(error)
