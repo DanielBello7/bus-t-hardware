@@ -87,8 +87,6 @@ class NFC_MFRC522:
 
                 if p.is_alive():
                     p.terminate()
-                    p.join()
-                    time.sleep(0.3)
                     result["error"] = "no card detected"
 
                 if "error" in result:
@@ -149,7 +147,11 @@ class NFC_MFRC522:
 
 if __name__ == "__main__":
     nfc = NFC_MFRC522(timeout=4.0)
-    pprint("waiting for card...")
-    result = nfc.reads()
-    pprint("read successful")
-    pprint(result)
+    try:
+        while True:
+            pprint("waiting for card...")
+            result = nfc.reads()
+            pprint("read successful")
+            pprint(result)
+    except KeyboardInterrupt:
+        pprint("canceled by user")
