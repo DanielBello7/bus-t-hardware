@@ -34,7 +34,7 @@ class LED:
 
             self.led.on()
             self.is_on = True
-            return {"result": self.is_on}
+            return {"result": "off" if not self.is_on else "on"}
         except Exception as e:
             error = str(e)
             pprint(error)
@@ -48,7 +48,7 @@ class LED:
 
             self.led.off()
             self.is_on = False
-            return {"result": self.is_on}
+            return {"result": "off" if not self.is_on else "on"}
         except Exception as e:
             error = str(e)
             pprint(error)
@@ -64,7 +64,7 @@ class LED:
             sleep(dur)
             self.pulse._stop_blink()
             self.is_on = True
-            return {"result": self.is_on}
+            return {"result": "off" if not self.is_on else "on"}
         except Exception as e:
             error = str(e)
             pprint(error)
