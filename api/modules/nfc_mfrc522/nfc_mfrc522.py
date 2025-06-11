@@ -26,21 +26,21 @@ class NFC_MFRC522:
             pprint(f"Error occured: {error}")
             self.reader = None
 
-    def _safe_read(self, result):
-        try:
-            reader = SimpleMFRC522()
-            id, data = reader.read()
-            result["result"] = {"id": id, "data": data}
-        except Exception as e:
-            result["error"] = str(e)
-        finally:
-            cleanup()
-
     def _safe_write(self, result, text):
         try:
             reader = SimpleMFRC522()
             reader.write(text)
             result["result"] = text
+        except Exception as e:
+            result["error"] = str(e)
+        finally:
+            cleanup()
+
+    def _safe_reads(self, result):
+        try:
+            reader = SimpleMFRC522()
+            id, data = reader.read()
+            result["result"] = {"id": id, "data": data}
         except Exception as e:
             result["error"] = str(e)
         finally:
@@ -55,25 +55,24 @@ class NFC_MFRC522:
 
             with Manager() as manager:
                 result = manager.dict()
-                p = Process(target=self._safe_read, args=(result,))
+                p = Process(target=self._safe_reads, args=(result,))
                 p.start()
                 p.join(self.timeout)
 
                 if p.is_alive():
                     p.terminate()
-                    cleanup()
                     result["error"] = "no card detected"
 
                 if "error" in result:
                     raise Exception(result["error"])
                 return dict(result)
         except Exception as e:
-            self.is_busy = False
             error = str(e)
             pprint(f"Error occured: {error}")
             return {"error": f"error occured: {error}"}
         finally:
             self.is_busy = False
+            cleanup()
 
     def pause(self):
         """
@@ -119,6 +118,7 @@ class NFC_MFRC522:
             return {"error": f"error occured: {error}"}
         finally:
             self.is_busy = False
+            cleanup()
 
 
 if __name__ == "__main__":
