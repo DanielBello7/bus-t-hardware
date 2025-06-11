@@ -25,6 +25,10 @@ class ADC_MCP3008:
             self.mcp = MCP3008(self.spi, self.cs)
             self.channel = AnalogIn(self.mcp, 0)
 
+            _ = self.channel.value  # or self.channel.voltage
+            if _ == 0:
+                raise Exception("adc read returned 0 — possibly no device connected")
+
             self.R1 = 10000
             self.R2 = 10000
             self.thread = None
@@ -61,7 +65,7 @@ class ADC_MCP3008:
     def listen(self):
         try:
             if not self.channel:
-                raise Exception("not connected")
+                raise Exception("hardware not initialized")
 
             if self.thread and self.thread.is_alive():
                 return {"result": "already running"}
@@ -79,7 +83,7 @@ class ADC_MCP3008:
     def stop_listen(self):
         try:
             if not self.channel:
-                raise Exception("not connected")
+                raise Exception("hardware not initialized")
 
             if not self.thread or not self.thread.is_alive():
                 return {"result": "not running"}
@@ -95,7 +99,7 @@ class ADC_MCP3008:
     def percentage(self):
         try:
             if not self.channel:
-                raise Exception("not connected")
+                raise Exception("hardware not initialized")
             return {"result": dict(self.ptg)}
         except Exception as e:
             pprint(f"error occurred: {str(e)}")

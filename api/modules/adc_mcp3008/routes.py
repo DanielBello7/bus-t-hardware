@@ -1,7 +1,7 @@
 """"""
 
 from modules.log.logger import logger
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify  # type: ignore
 from datetime import datetime
 from .adc_mcp3008 import ADC_MCP3008
 from inspect import currentframe
@@ -37,7 +37,7 @@ def get_level():
     except Exception as e:
         error = str(e)
         insert_msg(error)
-        return jsonify({"error": f"error occured: {error}"}), 400
+        return jsonify({"error": error}), 400
 
 
 @adc_mcp3008_routes.route("/start/", methods=["GET"])
@@ -54,7 +54,7 @@ def start_reading():
     except Exception as e:
         error = str(e)
         insert_msg(error)
-        return jsonify({"error": f"error occured: {error}"}), 400
+        return jsonify({"error": error}), 400
 
 
 @adc_mcp3008_routes.route("/pause/", methods=["GET"])
@@ -71,7 +71,7 @@ def stop_reading():
     except Exception as e:
         error = str(e)
         insert_msg(error)
-        return jsonify({"error": f"error occured: {error}"}), 400
+        return jsonify({"error": error}), 400
 
 
 """"""
