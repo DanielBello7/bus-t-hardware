@@ -86,6 +86,9 @@ class GPS_NEO_6M:
 
     def stream_location(self):
         try:
+            if not self.serial_port:
+                raise Exception("serial port not initialized")
+
             self.stop_event.clear()
 
             def stream_loop():
