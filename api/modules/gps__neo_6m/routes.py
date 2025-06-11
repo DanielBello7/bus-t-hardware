@@ -35,7 +35,7 @@ def get_location():
     except Exception as e:
         error = str(e)
         insert_msg(error)
-        return jsonify({"error": f"error occurred: {error}"}), 400
+        return jsonify({"error": error}), 400
 
 
 @gps_routes.route("/last_saved/", methods=["GET"])
@@ -52,7 +52,7 @@ def get_last_saved():
     except Exception as e:
         error = str(e)
         insert_msg(error)
-        return jsonify({"error": f"error occurred: {error}"}), 400
+        return jsonify({"error": error}), 400
 
 
 @gps_routes.route("/stream/", methods=["GET"])
@@ -69,7 +69,7 @@ def stream_location():
     except Exception as e:
         error = str(e)
         insert_msg(error)
-        return jsonify({"error": f"error occurred: {error}"}), 400
+        return jsonify({"error": error}), 400
 
 
 @gps_routes.route("/cancel_stream/", methods=["GET"])
@@ -86,7 +86,7 @@ def stop_streaming():
     except Exception as e:
         error = str(e)
         insert_msg(error)
-        return jsonify({"error": f"error occurred: {error}"}), 400
+        return jsonify({"error": error}), 400
 
 
 @gps_routes.route("/status/", methods=["GET"])
@@ -103,4 +103,4 @@ def streaming_status():
     except Exception as e:
         error = str(e)
         insert_msg(error)
-        return jsonify({"error": f"error occurred: {error}"}), 400
+        return jsonify({"error": error}), 400
