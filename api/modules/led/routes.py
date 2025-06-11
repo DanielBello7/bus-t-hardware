@@ -30,7 +30,6 @@ def turn_led_off():
         r = led.turn_off()
 
         if not r.get("result"):
-            print(str(r))
             raise Exception(r.get("error", "unknown error when turning led off"))
 
         insert_msg("turning off the led")
