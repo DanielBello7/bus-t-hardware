@@ -40,6 +40,9 @@ class Log:
                 self.db.remove(tinydb.Query().isodatetime == r["created_at"])
                 print(f"created_at {r['created_at']}")
 
+    def get_all_logs(self):
+        return self.db.all()
+
     def get_log(self, n=1000):
         """Return the last n log entries"""
         # sort in forward order (newest first)
