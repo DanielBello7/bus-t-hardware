@@ -33,7 +33,7 @@ def turn_led_off():
             raise Exception(r.get("error", "unknown error when turning led off"))
 
         insert_msg("turning off the led")
-        return jsonify({"response": r}), 200
+        return jsonify({"response": r["result"]}), 200
     except Exception as e:
         error = str(e)
         insert_msg(error)
@@ -50,7 +50,7 @@ def turn_led_on():
             raise Exception(r.get("error", "unknown error when turning led on"))
 
         insert_msg("turning on the led")
-        return jsonify({"response": r}), 200
+        return jsonify({"response": r["result"]}), 200
     except Exception as e:
         error = str(e)
         insert_msg(error)
@@ -74,7 +74,8 @@ def get_status():
 @led_routes.route("/blink/", methods=["GET"])
 def blink_lights():
     try:
-        """Blinks the light, limited by duration parameter
+        """
+        Blinks the light, limited by duration parameter
         (e.g. http://localhost/api/led/blink?duration=3)
         """
         dur = int(request.args.get("duration") or 3)
@@ -85,7 +86,7 @@ def blink_lights():
             raise Exception(r.get("error", "unknown error when blinking led"))
 
         insert_msg("blinking led lights")
-        return jsonify({"response": r}), 200
+        return jsonify({"response": r["result"]}), 200
     except Exception as e:
         error = str(e)
         insert_msg(error)
