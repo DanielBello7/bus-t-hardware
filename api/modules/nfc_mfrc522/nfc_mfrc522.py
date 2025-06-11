@@ -84,11 +84,10 @@ class NFC_MFRC522:
                 p = Process(target=self._safe_reads, args=(result,))
                 p.start()
                 p.join(self.timeout)
-                p.terminate()
 
-                # if p.is_alive():
-                #     p.terminate()
-                #     result["error"] = "no card detected"
+                if p.is_alive():
+                    p.terminate()
+                    result["error"] = "no card detected"
 
                 if "error" in result:
                     raise Exception(result["error"])
@@ -156,3 +155,5 @@ if __name__ == "__main__":
             pprint(result)
     except KeyboardInterrupt:
         pprint("canceled by user")
+    except Exception as e:
+        pprint(f"error: {str(e)}")
