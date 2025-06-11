@@ -34,13 +34,11 @@ def index():
     return (
         jsonify(
             {
-                "response": paginated_logs,
-                "pagination": {
-                    "total": total,
-                    "limit": num,
-                    "page": pge,
-                    "pages": (total + num - 1) // num,  # total number of pages
-                },
+                "docs": paginated_logs,
+                "total": total,
+                "limit": num,
+                "page": pge,
+                "pages": (total + num - 1) // num,  # total number of pages
             }
         ),
         200,
