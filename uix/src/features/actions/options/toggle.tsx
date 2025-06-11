@@ -18,7 +18,7 @@ export function Toggle() {
         if (settings.data.connected === false) {
             return setIsFetching(false);
         }
-        if (isFetching) return;
+
         setIsFetching(true);
 
         try {

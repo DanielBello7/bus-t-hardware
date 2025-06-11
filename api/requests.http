@@ -1,0 +1,118 @@
+### ADS1115 (ANALOG TO DIGITAL CONVERTER FOR BATTERY LEVEL)----------------
+GET http://localhost:5500/api/ads1115/level/
+
+### 
+GET http://localhost:5500/api/ads1115/start/
+
+###
+GET http://localhost:5500/api/ads1115/pause/
+
+
+
+
+### MCP3008 (ANALOG TO DIGITAL CONVERTER FOR BATTERY LEVEL)----------------
+GET http://localhost:5500/api/mcp3008/level/
+
+### 
+GET http://localhost:5500/api/mcp3008/start/
+
+###
+GET http://localhost:5500/api/mcp3008/pause/
+
+
+
+### GPS--------------------------------------------------------------------
+GET http://localhost:5500/api/gps/location/ 
+
+###
+GET http://localhost:5500/api/gps/last_saved/
+
+###
+GET http://localhost:5500/api/gps/cancel_stream/
+
+###
+GET http://localhost:5500/api/gps/stream/ 
+
+###
+GET http://localhost:5500/api/gps/status/ 
+
+
+
+
+### GSM--------------------------------------------------------------------
+PATCH http://localhost:5500/api/gsm/config/
+
+###
+GET http://localhost:5500/api/gsm/connect/
+
+###
+GET http://localhost:5500/api/gsm/disconnect/
+
+
+
+
+### LED--------------------------------------------------------------------
+GET http://localhost:5500/api/led/on/ 
+
+###
+GET http://localhost:5500/api/led/off/ 
+
+###
+GET http://localhost:5500/api/led/blink/ 
+
+###
+GET http://localhost:5500/api/led/status/ 
+
+
+
+
+### LOGS-------------------------------------------------------------------
+GET http://localhost:5500/api/logs/
+
+
+
+
+### NFC PN532--------------------------------------------------------------
+GET http://localhost:5500/api/pn532/reads/
+
+###
+POST http://localhost:5500/api/pn532/write/
+Content-Type: application/json
+Accept: application/json
+
+{
+    "text": "hey there user",
+}
+
+###
+GET http://localhost:5500/api/pn532/pause/
+
+###
+GET http://localhost:5500/api/pn532/stats/
+
+
+
+
+###  RFID RFC522-----------------------------------------------------------
+GET http://localhost:5500/api/rfc522/reads/
+
+###
+POST http://localhost:5500/api/rfc522/write/
+Content-Type: application/json
+Accept: application/json
+
+{
+    "text": "hello world user",
+}
+
+###
+GET http://localhost:5500/api/rfc522/pause/
+
+###
+GET http://localhost:5500/api/rfc522/stats/
+
+
+
+
+### APP--------------------------------------------------------------------
+GET http://localhost:5500/ping/

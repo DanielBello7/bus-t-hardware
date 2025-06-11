@@ -1,6 +1,6 @@
 """"""
 
-from flask import request, Blueprint, jsonify
+from flask import request, Blueprint, jsonify  # type: ignore
 from modules.log.logger import logger
 from .led import LED
 from datetime import datetime
@@ -94,3 +94,6 @@ def blink_lights():
         error = str(e)
         insert_msg(error)
         return jsonify({"error": f"error occured: {error}"}), 400
+
+
+""""""

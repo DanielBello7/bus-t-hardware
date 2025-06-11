@@ -1,6 +1,6 @@
 """"""
 
-import gpiozero
+import gpiozero  # type: ignore
 from pprint import pprint
 from time import sleep
 
@@ -75,3 +75,5 @@ class LED:
 if __name__ == "__main__":
     switch = LED(17)
     pprint(switch.turn_on())
+
+""""""
