@@ -19,7 +19,7 @@ def index():
     offset = (pge - 1) * num
 
     # the log returns a list of JSON objects, but must be a single JSON object
-    all_logs = logger.get_all_logs(num)
+    all_logs = logger.get_all_logs()
     total = len(all_logs)
 
     paginated_logs = all_logs[offset : offset + num]
