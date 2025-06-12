@@ -87,6 +87,9 @@ class NFC_MFRC522:
 
                 if p.is_alive():
                     p.terminate()
+                    p.join()
+                    cleanup()
+                    time.sleep(0.3)
                     result["error"] = "no card detected"
 
                 if "error" in result:
