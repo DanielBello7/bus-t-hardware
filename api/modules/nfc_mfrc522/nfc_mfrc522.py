@@ -149,14 +149,29 @@ class NFC_MFRC522:
 
 
 if __name__ == "__main__":
-    nfc = NFC_MFRC522(timeout=4.0)
+    reader = SimpleMFRC522()
     try:
         while True:
             pprint("waiting for card...")
-            result = nfc.reads()
+            id, data = reader.read()
+            result = {"id": id, "data": data}
             pprint("read successful")
             pprint(result)
     except KeyboardInterrupt:
         pprint("canceled by user")
     except Exception as e:
         pprint(f"error: {str(e)}")
+
+
+# if __name__ == "__main__":
+#     nfc = NFC_MFRC522(timeout=4.0)
+#     try:
+#         while True:
+#             pprint("waiting for card...")
+#             result = nfc.reads()
+#             pprint("read successful")
+#             pprint(result)
+#     except KeyboardInterrupt:
+#         pprint("canceled by user")
+#     except Exception as e:
+#         pprint(f"error: {str(e)}")
