@@ -19,9 +19,9 @@ atexit.register(cleanup)
 class NFC_MFRC522:
     def __init__(self, timeout):
         try:
+            self.reader = SimpleMFRC522()
             self.timeout = timeout
             self.is_busy = False
-            # self._probe_reader()
         except Exception as e:
             error = str(e)
             pprint(f"Error occured: {error}")
@@ -161,6 +161,9 @@ if __name__ == "__main__":
         pprint("canceled by user")
     except Exception as e:
         pprint(f"error: {str(e)}")
+    finally:
+        cleanup()
+        pprint("cleaned up")
 
 
 # if __name__ == "__main__":
