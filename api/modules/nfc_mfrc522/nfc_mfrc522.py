@@ -82,7 +82,7 @@ class NFC_MFRC522:
                     pprint(txt_w)
                     if not id_w:
                         raise Exception("write failed — no card id returned")
-                    return {"result": txt_w.strip}
+                    return {"result": txt_w.strip()}
                 time.sleep(0.1)
 
             raise Exception("no card detected")
