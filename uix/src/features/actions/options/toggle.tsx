@@ -10,14 +10,16 @@ import classnames from 'classnames';
 export function Toggle() {
     const [status, setStatus] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [isFetching, setIsFetching] = useState(true);
+    const [isFetching, setIsFetching] = useState(false);
 
     const settings = useSettings((state) => state);
 
-    const get_status = useCallback(async () => {
+    const get_status = async () => {
         if (settings.data.connected === false) {
             return setIsFetching(false);
         }
+
+        if (isFetching) return;
 
         setIsFetching(true);
 
@@ -32,7 +34,7 @@ export function Toggle() {
         } finally {
             setIsFetching(false);
         }
-    }, [isFetching, settings.data.connected]);
+    };
 
     const toggle_light = async (params: boolean) => {
         if (settings.data.connected == false) {
@@ -42,6 +44,12 @@ export function Toggle() {
 
         setIsLoading(true);
         try {
+            const check = (await led_status()).response;
+            if (
+                (check === 'off' && params === false) ||
+                (check === 'on' && params === true)
+            )
+                return;
             let response;
             if (params === true) response = (await turn_on_led()).response;
             else response = (await turn_off_led()).response;
@@ -59,7 +67,7 @@ export function Toggle() {
 
     useEffect(() => {
         get_status();
-    }, [get_status]);
+    }, []);
 
     return (
         <OptionBox

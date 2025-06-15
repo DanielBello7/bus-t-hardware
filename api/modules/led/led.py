@@ -69,7 +69,8 @@ class LED:
                 self.led.off()
                 self.is_on = False
 
-            threading.Thread(target=blink_logic, daemon=True).start()
+            blink_logic()
+            # threading.Thread(target=blink_logic, daemon=True).start()
             return {"result": "blinking"}
         except Exception as e:
             error = str(e)
