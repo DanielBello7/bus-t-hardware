@@ -30,6 +30,5 @@
   linux: {
     target: ["AppImage"],
     artifactName: "latest.${ext}",
-    icon: "public/icon"
   },
 }
