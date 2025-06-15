@@ -13,4 +13,6 @@ pip install tinydb
 pip install RPi.GPIO
 pip install adafruit-circuitpython-pn532
 pip install mfrc522
+pip install dotenv
+pip install lgpio
 pip install gunicorn
