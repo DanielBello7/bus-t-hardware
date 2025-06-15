@@ -6,6 +6,6 @@ export async function read_using_rfc522(
     signal: AbortSignal
 ): Promise<Res<RFC522>> {
     const api = getApi();
-    const response = await api.get('/api/rfc522/reads/', { signal });
+    const response = await api.get('/api/mfrc522/reads/', { signal });
     return response.data;
 }

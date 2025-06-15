@@ -56,7 +56,7 @@ export function RFC522_NFC() {
             const response = (
                 await read_using_rfc522(rAbort.current.signal)
             ).response;
-            toaster.alert(JSON.stringify(response.data));
+            toaster.alert(`Card data: ${response.result}`);
         } catch (e) {
             const err = ensure_error(e);
             toaster.error(`Error occured when reading: ${err.message}`);
@@ -88,7 +88,8 @@ export function RFC522_NFC() {
                     wAbort.current.signal
                 )
             ).response;
-            toaster.alert(response);
+            toaster.alert(`Written: ${response.result}`);
+            setdata('');
         } catch (e) {
             const err = ensure_error(e);
             toaster.error(`Error occured when writing: ${err.message}`);

@@ -1,5 +1,6 @@
 import { getApi } from '@/lib/api';
 import { Res } from '@/types';
+import { RFC522 } from '@/types/nfc/rfc522';
 
 type Params = {
     data: string;
@@ -7,9 +8,9 @@ type Params = {
 export async function write_using_rfc522(
     params: Params,
     signal: AbortSignal
-): Promise<Res<string>> {
+): Promise<Res<RFC522>> {
     const api = getApi();
-    const response = await api.post('/api/rfc522/write/', params, {
+    const response = await api.post('/api/mfrc522/write/', params, {
         signal,
     });
     return response.data;
