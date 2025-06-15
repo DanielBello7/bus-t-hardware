@@ -1,4 +1,4 @@
-FROM node:20.13.1 
+FROM  --platform=linux/arm64 node:20.13.1 
 
 RUN apt-get update && apt-get install -y \
     libgtk-3-dev \
@@ -14,6 +14,9 @@ RUN apt-get update && apt-get install -y \
     xz-utils \
     python3 \
     git \
+    libfuse2 \
+    libc6 \
+    libstdc++6 \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app

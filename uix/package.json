@@ -3,18 +3,16 @@
     "private": true,
     "version": "0.0.0",
     "type": "module",
-    "build": {
-        "icon": "dist/icon"
-    },
     "scripts": {
         "dev": "vite",
         "format": "prettier --write \"src/**/*.tsx\"",
         "build": "tsc && vite build && electron-builder",
-        "build:linux": "tsc && vite build && electron-builder --linux",
+        "build:linux": "uname -m && npm run postinstall && tsc && vite build && electron-builder --linux",
         "docker:build:linux": "docker-compose up --build",
         "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
         "preview": "vite preview",
-        "dev:live": "vite --host"
+        "dev:live": "vite --host",
+        "postinstall": "chmod +x ./node_modules/app-builder-bin/linux/arm64/app-builder"
     },
     "dependencies": {
         "@radix-ui/react-dialog": "^1.1.14",
