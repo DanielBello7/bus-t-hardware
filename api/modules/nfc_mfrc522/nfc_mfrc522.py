@@ -13,6 +13,7 @@ reading and writing onto nfc tags
 """
 
 GPIO.setwarnings(False)
+atexit.register(GPIO.cleanup)
 
 
 class NFC_MFRC522:
@@ -35,7 +36,7 @@ class NFC_MFRC522:
             start_time = time.time()
 
             while time.time() - start_time < self.timeout:
-                id, text = self.reader.read()
+                id, text = self.reader.read_no_block()
                 if id:
                     return {"result": text.strip()}
                 time.sleep(0.1)
@@ -57,9 +58,8 @@ class NFC_MFRC522:
             if not self.reader:
                 raise Exception("reader not initialized")
 
-            GPIO.cleanup()
             self.reader = SimpleMFRC522()
-            return {"result": "idle" if self.is_busy else "canceled"}
+            return {"result": "idle" if self.is_busy else "reset"}
         except Exception as e:
             error = str(e)
             pprint(f"Error occurred: {error}")
