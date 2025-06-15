@@ -77,7 +77,8 @@ class NFC_MFRC522:
             while time.time() - start_time < self.timeout:
                 id, _ = self.reader.read_no_block()
                 if id:
-                    self.reader.write(text)
+                    self.reader.write_no_block(text.strip())
+                    time.sleep(0.1)
                     _, value = self.reader.read_no_block()
                     return {"result": value}
                 time.sleep(0.1)
