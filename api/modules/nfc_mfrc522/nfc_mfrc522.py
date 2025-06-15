@@ -80,7 +80,7 @@ class NFC_MFRC522:
                     self.reader.write_no_block(text.strip())
                     time.sleep(0.1)
                     _, value = self.reader.read_no_block()
-                    return {"result": value}
+                    return {"result": value.strip()}
                 time.sleep(0.1)
 
             raise Exception("no card detected")

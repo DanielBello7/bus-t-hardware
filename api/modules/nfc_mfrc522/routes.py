@@ -59,7 +59,7 @@ def write_to_card():
         if not data.get("result"):
             raise Exception(data.get("error", "unknown write error"))
 
-        insert_msg("Write using MFRC522", currentframe().f_code.co_name)
+        insert_msg("Write using MFRC522")
         return jsonify({"response": data}), 200
     except Exception as e:
         error = str(e)
@@ -77,6 +77,7 @@ def cancel_operation():
         if not data.get("result"):
             raise Exception(data.get("error", "unknown cancel error"))
 
+        insert_msg("canceled nfc operation")
         return jsonify({"response": "canceled"}), 200
     except Exception as e:
         error = str(e)
