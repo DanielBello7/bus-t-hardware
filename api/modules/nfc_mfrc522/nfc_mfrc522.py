@@ -38,7 +38,7 @@ class NFC_MFRC522:
             while time.time() - start_time < self.timeout:
                 id, text = self.reader.read_no_block()
                 if id:
-                    return {"result": text}
+                    return {"result": text.strip()}
                 time.sleep(0.1)
 
             raise Exception("no card detected...")
@@ -77,11 +77,11 @@ class NFC_MFRC522:
             while time.time() - start_time < self.timeout:
                 id, _ = self.reader.read_no_block()
                 if id:
-                    id_w, txt_w = self.reader.write_no_block(text.strip())
+                    id_w, txt_w = self.reader.write(text.strip())
                     pprint(id_w)
                     pprint(txt_w)
                     if not id_w:
-                        raise Exception("write failed — no card ID returned")
+                        raise Exception("write failed — no card id returned")
                     return {"result": txt_w.strip}
                 time.sleep(0.1)
 
