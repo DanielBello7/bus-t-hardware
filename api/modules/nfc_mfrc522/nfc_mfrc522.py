@@ -12,6 +12,9 @@ the I2C port, you can perform multiple operations on this, including
 reading and writing onto nfc tags
 """
 
+GPIO.setwarnings(False)
+atexit.register(GPIO.cleanup)
+
 
 class NFC_MFRC522:
     def __init__(self, timeout):
@@ -67,7 +70,6 @@ class NFC_MFRC522:
             pprint(f"Error occurred: {error}")
             return {"error": f"error occurred: {error}"}
         finally:
-            GPIO.cleanup()
             self.is_busy = False
 
     def pause(self):
@@ -117,13 +119,10 @@ class NFC_MFRC522:
             pprint(f"Error occurred: {error}")
             return {"error": f"error occurred: {error}"}
         finally:
-            GPIO.cleanup()
             self.is_busy = False
 
 
 if __name__ == "__main__":
-    atexit.register(GPIO.cleanup)
-
     nfc = NFC_MFRC522(timeout=5.0)
     try:
         while True:
