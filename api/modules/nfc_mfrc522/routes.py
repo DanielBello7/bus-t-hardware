@@ -5,6 +5,7 @@ from modules.log.logger import logger
 from datetime import datetime
 from inspect import currentframe
 from .nfc_mfrc522 import NFC_MFRC522
+from pprint import pprint
 
 nfc_mfrc522_routes = Blueprint(
     "nfc_mfrc522_routes", __name__, url_prefix="/api/mfrc522"
@@ -54,6 +55,7 @@ def write_to_card():
             raise ValueError("Missing 'data' field in request body")
 
         data = nfc.write(text=write_data["data"])
+        pprint(data)
         if not data.get("result"):
             raise Exception(data.get("error", "unknown write error"))
 
