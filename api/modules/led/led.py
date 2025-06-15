@@ -60,7 +60,7 @@ class LED:
         try:
             if not self.led:
                 raise Exception("led not initialized")
-            self.is_on = False
+            self.is_on = True
 
             def blink_logic():
                 self.led.blink()
