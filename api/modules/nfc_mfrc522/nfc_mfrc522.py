@@ -49,7 +49,7 @@ class NFC_MFRC522:
         finally:
             self.is_busy = False
 
-    def pause(self):
+    def cleanup(self):
         """
         Only useful if the read is running in another thread.
         Just calls GPIO cleanup, but cannot interrupt `reader.read()` directly.
@@ -78,10 +78,11 @@ class NFC_MFRC522:
                 id, _ = self.reader.read_no_block()
                 if id:
                     self.reader.write(text)
-                    return {"result": text}
+                    _, value = self.reader.read_no_block()
+                    return {"result": value}
                 time.sleep(0.1)
 
-            raise Exception("no card detected...")
+            raise Exception("no card detected")
         except Exception as e:
             error = str(e)
             pprint(f"Error occurred: {error}")
@@ -96,7 +97,6 @@ if __name__ == "__main__":
         while True:
             pprint("waiting for card...")
             result = nfc.reads()
-            pprint("read successful")
             pprint(result)
     except KeyboardInterrupt:
         pprint("canceled by user")

@@ -43,6 +43,7 @@ def read_from_nfc_card():
         return jsonify({"error": error}), 400
 
 
+# write to card through nfc
 @nfc_mfrc522_routes.route("/write/", methods=["POST"])
 def write_to_card():
     global is_busy, nfc
@@ -92,3 +93,6 @@ def status():
         error = str(e)
         insert_msg(error)
         return jsonify({"error": error}), 400
+
+
+""""""
