@@ -46,7 +46,7 @@ def read_from_nfc_card():
 # write to card through nfc
 @nfc_mfrc522_routes.route("/write/", methods=["POST"])
 def write_to_card():
-    global is_busy, nfc
+    global nfc
 
     try:
         write_data = request.get_json()
@@ -68,7 +68,7 @@ def write_to_card():
 # cancel nfc operations
 @nfc_mfrc522_routes.route("/pause/", methods=["GET"])
 def cancel_operation():
-    global is_busy, nfc
+    global nfc
 
     try:
         data = nfc.pause()
