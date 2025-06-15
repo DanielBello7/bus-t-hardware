@@ -2,9 +2,9 @@
 
 from mfrc522 import SimpleMFRC522  # type: ignore
 from pprint import pprint
-from multiprocessing import Process, Pipe
 import atexit
 import RPi.GPIO as GPIO  # type: ignore
+import time
 
 """
 Module that helps in handling the operations for an NFC scanner running on
@@ -26,46 +26,23 @@ class NFC_MFRC522:
             error = str(e)
             pprint(f"Error occurred: {error}")
 
-    def _safe_write(self, conn, text):
-        try:
-            reader = SimpleMFRC522()
-            reader.write(text)
-            conn.send(text)
-        except Exception as e:
-            conn.send(f"error writing card: {str(e)}")
-        finally:
-            conn.close()
-
-    def _safe_reads(self, conn):
-        try:
-            reader = SimpleMFRC522()
-            id, text = reader.read()
-            conn.send(text)
-        except Exception as e:
-            conn.send(f"error reading card: {str(e)}")
-        finally:
-            conn.close()
-
     def reads(self):
-        parent_conn, child_conn = Pipe()
-        p = None
         try:
             if not self.reader:
                 raise Exception("reader not initialized")
 
             self.is_busy = True
 
-            p = Process(target=self._safe_reads, args=(child_conn,))
-            p.start()
+            start_time = time.time()
 
-            if parent_conn.poll(self.timeout):  # Wait up to 5 seconds
-                result = parent_conn.recv()
-                return {"result": result}
-            else:
-                raise Exception("timeout: no card detected")
+            while time.time() - start_time < self.timeout:
+                id, text = self.reader.read_no_block()
+                if id:
+                    return {"result": text}
+                time.sleep(0.1)
+
+            raise Exception("no card detected...")
         except Exception as e:
-            if p and p.is_alive():
-                p.terminate()
             error = str(e)
             pprint(f"Error occurred: {error}")
             return {"error": f"error occurred: {error}"}
@@ -89,32 +66,23 @@ class NFC_MFRC522:
             return {"error": f"error occurred: {error}"}
 
     def write(self, text="Hello NFC!"):
-        parent_conn, child_conn = Pipe()
-        p = None
         try:
             if not self.reader:
                 raise Exception("reader not initialized")
 
             self.is_busy = True
 
-            p = Process(
-                target=self._safe_write,
-                args=(
-                    child_conn,
-                    text,
-                ),
-            )
-            p.start()
+            start_time = time.time()
 
-            if parent_conn.poll(self.timeout):  # Wait up to 5 seconds
-                result = parent_conn.recv()
-                return {"result": result}
-            else:
-                raise Exception("timeout: no card detected")
+            while time.time() - start_time < self.timeout:
+                id, _ = self.reader.read_no_block()
+                if id:
+                    self.reader.write(text)
+                    return {"result": text}
+                time.sleep(0.1)
 
+            raise Exception("no card detected...")
         except Exception as e:
-            if p and p.is_alive():
-                p.terminate()
             error = str(e)
             pprint(f"Error occurred: {error}")
             return {"error": f"error occurred: {error}"}
