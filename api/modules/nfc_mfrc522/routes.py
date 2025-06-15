@@ -55,7 +55,7 @@ def write_to_card():
             raise ValueError("Missing 'data' field in request body")
 
         data = nfc.write(text=write_data["data"])
-        pprint(data)
+
         if not data.get("result"):
             raise Exception(data.get("error", "unknown write error"))
 
@@ -73,7 +73,7 @@ def cancel_operation():
     global nfc
 
     try:
-        data = nfc.pause()
+        data = nfc.cleanup()
         if not data.get("result"):
             raise Exception(data.get("error", "unknown cancel error"))
 
