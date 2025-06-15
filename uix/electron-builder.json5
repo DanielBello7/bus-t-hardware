@@ -29,6 +29,7 @@
   },
   linux: {
     target: ["AppImage"],
-    artifactName: "${productName}-Linux-${version}.${ext}",
+    artifactName: "latest.${ext}",
+    icon: "public/icon"
   },
 }
