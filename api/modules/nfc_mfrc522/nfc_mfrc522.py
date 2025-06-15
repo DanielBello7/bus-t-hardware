@@ -13,7 +13,6 @@ reading and writing onto nfc tags
 """
 
 GPIO.setwarnings(False)
-atexit.register(GPIO.cleanup)
 
 
 class NFC_MFRC522:
@@ -36,7 +35,7 @@ class NFC_MFRC522:
             start_time = time.time()
 
             while time.time() - start_time < self.timeout:
-                id, text = self.reader.read_no_block()
+                id, text = self.reader.read()
                 if id:
                     return {"result": text.strip()}
                 time.sleep(0.1)
