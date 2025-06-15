@@ -10,7 +10,6 @@ pip install pynmea2
 pip install pyserial
 pip install gpiozero
 pip install tinydb
-pip install spydev
 pip install RPi.GPIO
 pip install adafruit-circuitpython-pn532
 pip install mfrc522

@@ -1,7 +1,3 @@
-# INSTALL INSTRUCTIONS
-due to development restrictions a requirements.txt file wasn't generated but an install list was,
-so items on the install.txt are to be installed accordingly on the raspberry-pi before it can work.
-
 ✅ - indicates if it's written
 🚫 - indicates the code hasn't been written, module or routes
 
