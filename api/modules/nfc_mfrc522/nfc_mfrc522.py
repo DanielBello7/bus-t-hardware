@@ -78,6 +78,8 @@ class NFC_MFRC522:
                 id, _ = self.reader.read_no_block()
                 if id:
                     id_w, txt_w = self.reader.write_no_block(text.strip())
+                    pprint(id_w)
+                    pprint(txt_w)
                     if not id_w:
                         raise Exception("write failed — no card ID returned")
                     return {"result": txt_w.strip}
