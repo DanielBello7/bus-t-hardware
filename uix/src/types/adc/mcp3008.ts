@@ -1,5 +1,5 @@
 export type MCP3008_BATTERY_RESPONSE = {
-    voltage: string;
+    voltage: number;
     percentage: number;
     timestamp: string;
 };

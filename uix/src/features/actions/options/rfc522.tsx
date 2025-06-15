@@ -84,7 +84,7 @@ export function RFC522_NFC() {
         try {
             const response = (
                 await write_using_rfc522(
-                    { text: data },
+                    { data: data },
                     wAbort.current.signal
                 )
             ).response;

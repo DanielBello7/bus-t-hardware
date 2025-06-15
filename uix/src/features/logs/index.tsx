@@ -15,7 +15,7 @@ import { LOG } from '@/types/log';
 import { get_logs } from '@/api';
 
 export function Logs() {
-    const [logs, setLogs] = useState<LOG[]>([]);
+    const [logs, setLogs] = useState<LOG['docs']>([]);
     const [isLoading, setIsLoading] = useState(true);
     const settings = useSettings((state) => state);
 
@@ -26,8 +26,8 @@ export function Logs() {
         setIsLoading(true);
 
         try {
-            const response = (await get_logs()).response;
-            setLogs(response);
+            const response = await get_logs();
+            setLogs(response.docs);
         } catch (e) {
             const err = ensure_error(e);
             toaster.error(

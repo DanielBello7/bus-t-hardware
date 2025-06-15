@@ -4,8 +4,8 @@ import { Lightbulb, LightbulbOff, Loader } from 'lucide-react';
 import { useCallback, useEffect, useState } from 'react';
 import { toaster, useSettings } from '@/store';
 import { ensure_error } from '@/lib/ensure-error';
-import classnames from 'classnames';
 import { led_status, turn_off_led, turn_on_led } from '@/api/led';
+import classnames from 'classnames';
 
 export function Toggle() {
     const [status, setStatus] = useState(false);
@@ -23,7 +23,7 @@ export function Toggle() {
 
         try {
             const response = (await led_status()).response;
-            setStatus(response);
+            setStatus(response === 'off' ? false : true);
         } catch (e) {
             const err = ensure_error(e);
             toaster.error(
@@ -45,7 +45,7 @@ export function Toggle() {
             let response;
             if (params === true) response = (await turn_on_led()).response;
             else response = (await turn_off_led()).response;
-            setStatus(response);
+            setStatus(response === 'off' ? false : true);
         } catch {
             toaster.error(
                 `Error occured when trying to turn ${

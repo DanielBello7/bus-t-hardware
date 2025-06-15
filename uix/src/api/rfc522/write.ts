@@ -2,7 +2,7 @@ import { getApi } from '@/lib/api';
 import { Res } from '@/types';
 
 type Params = {
-    text: string;
+    data: string;
 };
 export async function write_using_rfc522(
     params: Params,

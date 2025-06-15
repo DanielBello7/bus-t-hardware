@@ -79,7 +79,7 @@ export function PN532() {
         try {
             const response = (
                 await write_using_pn532(
-                    { text: data },
+                    { data: data },
                     wAbort.current.signal
                 )
             ).response;

@@ -1,6 +1,7 @@
 """"""
 
 import gpiozero  # type: ignore
+import threading
 from pprint import pprint
 from time import sleep
 
@@ -59,13 +60,17 @@ class LED:
         try:
             if not self.led:
                 raise Exception("led not initialized")
-
-            self.led.blink()
-            sleep(dur)
-            self.led._stop_blink()
-            self.led.off()
             self.is_on = False
-            return {"result": "off" if not self.is_on else "on"}
+
+            def blink_logic():
+                self.led.blink()
+                sleep(dur)
+                self.led._stop_blink()
+                self.led.off()
+                self.is_on = False
+
+            threading.Thread(target=blink_logic, daemon=True).start()
+            return {"result": "blinking"}
         except Exception as e:
             error = str(e)
             pprint(error)

@@ -2,7 +2,7 @@ import { getApi } from '@/lib/api';
 import { Res } from '@/types';
 
 type Params = {
-    text: string;
+    data: string;
 };
 export async function write_using_pn532(
     params: Params,
