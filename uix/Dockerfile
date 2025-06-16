@@ -1,4 +1,4 @@
-FROM  --platform=linux/arm64 node:20.13.1 
+FROM node:20.13.1 
 
 RUN apt-get update && apt-get install -y \
     libgtk-3-dev \
