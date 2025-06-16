@@ -22,7 +22,7 @@ let win: BrowserWindow | null;
 
 function createWindow() {
     win = new BrowserWindow({
-        fullscreen: false,
+        fullscreen: os.platform() === 'linux' ? true : false,
         icon: path.join(process.env.VITE_PUBLIC, 'icon.png'),
         webPreferences: {
             preload: path.join(__dirname, 'preload.mjs'),
